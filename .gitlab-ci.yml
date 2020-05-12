@@ -177,7 +177,7 @@ build_image:
         - docker logout       
 
     dependencies:
-        - synonym-formatting
+        - Synonym-formatting
     artifacts:
         name: "database-${CI_JOB_ID}"
         paths:
