@@ -415,7 +415,7 @@ CREATE TABLE public.human_gene (
     hgnc_acc_id character varying(255) NOT NULL,
     name character varying(255) NOT NULL,
     symbol character varying(255) NOT NULL,
-    ensembl_gene_acc_id character varying(255) NOT NULL,
+    ensembl_gene_acc_id character varying(255),
     entrez_gene_acc_id bigint
 );
 
