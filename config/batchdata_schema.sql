@@ -202,6 +202,87 @@ ALTER TABLE public.hcop_id_seq OWNER TO batch_admin;
 --
 
 ALTER SEQUENCE public.hcop_id_seq OWNED BY public.hcop.id;
+
+
+
+--
+-- Name: idg_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.idg_tmp (
+    id bigint NOT NULL,
+    name character varying(255),
+    tdl character varying(255),
+    symbol character varying(255),
+    uniprot_acc_id character varying(20),
+    chr character varying(255)
+);
+
+
+ALTER TABLE public.idg_tmp OWNER TO batch_admin;
+
+
+--
+-- Name: idg_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.idg_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.idg_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: idg_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.idg_tmp_id_seq OWNED BY public.idg_tmp.id;
+
+
+--
+-- Name: idg; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.idg (
+    id bigint NOT NULL,
+    human_gene_id bigint,
+    name character varying(255),
+    tdl character varying(255),
+    symbol character varying(255),
+    uniprot_acc_id character varying(20),
+    chr character varying(255)
+);
+
+
+ALTER TABLE public.idg OWNER TO batch_admin;
+
+--
+-- Name: idg_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.idg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.idg_id_seq OWNER TO batch_admin;
+
+--
+-- Name: idg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.idg_id_seq OWNED BY public.idg.id;
+
+
 --
 -- Name: mgi_gene; Type: TABLE; Schema: public; Owner: batch_admin
 --
@@ -516,12 +597,27 @@ ALTER TABLE public.ortholog OWNER TO batch_admin;
 ALTER TABLE ONLY public.hcop_tmp ALTER COLUMN id SET DEFAULT nextval('public.hcop_tmp_id_seq'::regclass);
 
 
-
 --
 -- Name: hcop id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
 
 ALTER TABLE ONLY public.hcop ALTER COLUMN id SET DEFAULT nextval('public.hcop_id_seq'::regclass);
+
+
+
+--
+-- Name: idg_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.idg_tmp ALTER COLUMN id SET DEFAULT nextval('public.idg_tmp_id_seq'::regclass);
+
+
+--
+-- Name: idg id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.idg ALTER COLUMN id SET DEFAULT nextval('public.idg_id_seq'::regclass);
+
 
 
 --
@@ -584,13 +680,31 @@ ALTER TABLE ONLY public.hcop_tmp
     ADD CONSTRAINT hcop_tmp_pkey PRIMARY KEY (id);
 
 
-
 --
 -- Name: hcop hcop_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
 --
 
 ALTER TABLE ONLY public.hcop
     ADD CONSTRAINT hcop_pkey PRIMARY KEY (id);
+
+
+
+
+--
+-- Name: idg_tmp idg_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.idg_tmp
+    ADD CONSTRAINT idg_tmp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idg idg_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.idg
+    ADD CONSTRAINT idg_pkey PRIMARY KEY (id);
+
 
 
 --
@@ -701,6 +815,16 @@ ALTER TABLE ONLY public.human_gene
 
 ALTER TABLE ONLY public.hcop
     ADD CONSTRAINT fk893i1het18j033e8a67r63t0 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+
+
+
+--
+-- Name: idg fk993i1het18j033e8a67r63t9; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.idg
+    ADD CONSTRAINT fk993i1het18j033e8a67r63t9 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+
 
 --
 -- Name: hcop fk460i1het18j033e8a67r63i5; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
