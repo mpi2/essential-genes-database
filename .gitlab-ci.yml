@@ -65,15 +65,20 @@ HGNC_data:
     stage: download
     before_script:
         - apk add --update curl && rm -rf /var/cache/apk/*
+        # - apk --no-cache add dropbear-scp dropbear-dbclient
     script:
+        - docker info
+        - export
+        - mount 
         
         # Establish a data directory
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
         
         # Fetch data files for the service
-        
+        # /nfs/komp2/web/datafiles/batch/latest
         # HGNC_data
+        # - /usr/bin/scp ves-ebi-d0:/nfs/komp2/web/datafiles/batch/latest/alternative_loci_set.txt
         - curl -sSLN -O ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/alternative_loci_set.txt
         - curl -sSLN -O ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/non_alt_loci_set.txt
         - curl -sSLN -O ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt
