@@ -65,20 +65,14 @@ HGNC_data:
     stage: download
     before_script:
         - apk add --update curl && rm -rf /var/cache/apk/*
-        # - apk --no-cache add dropbear-scp dropbear-dbclient
     script:
-        - docker info
-        - export
-        - mount 
         
         # Establish a data directory
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
         
         # Fetch data files for the service
-        # /nfs/komp2/web/datafiles/batch/latest
         # HGNC_data
-        # - /usr/bin/scp ves-ebi-d0:/nfs/komp2/web/datafiles/batch/latest/alternative_loci_set.txt
         - curl -sSLN -O ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/alternative_loci_set.txt
         - curl -sSLN -O ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/non_alt_loci_set.txt
         - curl -sSLN -O ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt
@@ -116,6 +110,33 @@ MGI_data:
 
 
 
+Extra_data:
+    stage: download
+    before_script:
+        - apk add --update curl && rm -rf /var/cache/apk/*
+    script:
+        
+        # Establish a data directory
+        - mkdir -p "$MOUNT_POINT"
+        - cd "$MOUNT_POINT"
+        
+        # Fetch data files for the service
+        
+        # ClinGen
+        - curl -sSLN -O https://search.clinicalgenome.org/kb/gene-dosage.csv
+        
+        # Gnomad Constraint pLoF Metrics by Gene
+        - curl -sSLN -O https://storage.googleapis.com/gnomad-public/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz
+        
+        # DepMap Achilles_gene_effect.csv - DepMap Public 20Q2
+        - curl -sSLN -O https://ndownloader.figshare.com/files/22629068
+
+    artifacts:
+        paths:
+            - "$MOUNT_POINT/"
+
+
+
 #
 # Data formatting stage
 #
@@ -135,6 +156,7 @@ Synonym-formatting:
     dependencies:
         - HGNC_data
         - MGI_data
+        - Extra_data
     artifacts:
         paths:
             - "$MOUNT_POINT/"
