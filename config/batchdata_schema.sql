@@ -364,6 +364,127 @@ ALTER TABLE public.clingen_id_seq OWNER TO batch_admin;
 ALTER SEQUENCE public.clingen_id_seq OWNED BY public.clingen.id;
 
 
+
+
+
+--
+-- Name: achillies_cell_types; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.achillies_cell_types (
+    id bigint NOT NULL,
+    cell_type_names text
+);
+
+
+ALTER TABLE public.achillies_cell_types OWNER TO batch_admin;
+
+
+--
+-- Name: achillies_cell_types_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.achillies_cell_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.achillies_cell_types_id_seq OWNER TO batch_admin;
+
+--
+-- Name: achillies_cell_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.achillies_cell_types_id_seq OWNED BY public.achillies_cell_types.id;
+
+
+
+
+
+
+--
+-- Name: achilles_gene_effect_raw; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.achilles_gene_effect_raw (
+    id bigint NOT NULL,
+    symbol character varying(255),
+    entrez_acc_id bigint,
+    cell_type_data text,
+    cell_type_name_id bigint
+);
+
+
+ALTER TABLE public.achilles_gene_effect_raw OWNER TO batch_admin;
+
+
+--
+-- Name: achilles_gene_effect_raw_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.achilles_gene_effect_raw_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.achilles_gene_effect_raw_id_seq OWNER TO batch_admin;
+
+--
+-- Name: achilles_gene_effect_raw_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.achilles_gene_effect_raw_id_seq OWNED BY public.achilles_gene_effect_raw.id;
+
+
+--
+-- Name: achilles_gene_effect; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.achilles_gene_effect (
+    id bigint NOT NULL,
+    human_gene_id bigint,
+    raw_data_id bigint,
+    entrez_acc_id bigint,
+    mean_gene_effect float8
+);
+
+
+ALTER TABLE public.achilles_gene_effect OWNER TO batch_admin;
+
+--
+-- Name: achilles_gene_effect_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.achilles_gene_effect_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.achilles_gene_effect_id_seq OWNER TO batch_admin;
+
+--
+-- Name: achilles_gene_effect_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.achilles_gene_effect_id_seq OWNED BY public.achilles_gene_effect.id;
+
+
+
+
+
 --
 -- Name: mgi_gene; Type: TABLE; Schema: public; Owner: batch_admin
 --
@@ -718,6 +839,29 @@ ALTER TABLE ONLY public.clingen ALTER COLUMN id SET DEFAULT nextval('public.clin
 
 
 --
+-- Name: achillies_cell_types id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achillies_cell_types ALTER COLUMN id SET DEFAULT nextval('public.achillies_cell_types_id_seq'::regclass);
+
+
+--
+-- Name: achilles_gene_effect_raw id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect_raw ALTER COLUMN id SET DEFAULT nextval('public.achilles_gene_effect_raw_id_seq'::regclass);
+
+
+--
+-- Name: achilles_gene_effect id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect ALTER COLUMN id SET DEFAULT nextval('public.achilles_gene_effect_id_seq'::regclass);
+
+
+
+
+--
 -- Name: hgnc_gene id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
 
@@ -819,6 +963,33 @@ ALTER TABLE ONLY public.clingen_tmp
 
 ALTER TABLE ONLY public.clingen
     ADD CONSTRAINT clingen_pkey PRIMARY KEY (id);
+
+
+
+
+--
+-- Name: achillies_cell_types achillies_cell_types_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achillies_cell_types
+    ADD CONSTRAINT achillies_cell_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: achilles_gene_effect_raw achilles_gene_effect_raw_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect_raw
+    ADD CONSTRAINT achilles_gene_effect_raw_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: achilles_gene_effect achilles_gene_effect_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect
+    ADD CONSTRAINT achilles_gene_effect_pkey PRIMARY KEY (id);
+
 
 
 
@@ -951,6 +1122,32 @@ ALTER TABLE ONLY public.idg
 ALTER TABLE ONLY public.clingen
     ADD CONSTRAINT fk963i1her18j033e8a67r63t2 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
 
+
+
+
+--
+-- Name: achilles_gene_effect fk961a1heb18j033e8a67r63t6; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect
+    ADD CONSTRAINT fk961a1heb18j033e8a67r63t6 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+
+--
+-- Name: achilles_gene_effect fk967b1heb18j077e8a67r63t6; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect
+    ADD CONSTRAINT fk967b1heb18j077e8a67r63t6 FOREIGN KEY (raw_data_id) REFERENCES public.achilles_gene_effect_raw(id);
+
+
+
+
+--
+-- Name: achilles_gene_effect_raw fk969u1heb18j099e8a67r63t8; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.achilles_gene_effect_raw
+    ADD CONSTRAINT fk969u1heb18j099e8a67r63t8 FOREIGN KEY (cell_type_name_id) REFERENCES public.achillies_cell_types(id);
 
 
 
