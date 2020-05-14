@@ -283,6 +283,87 @@ ALTER TABLE public.idg_id_seq OWNER TO batch_admin;
 ALTER SEQUENCE public.idg_id_seq OWNED BY public.idg.id;
 
 
+
+
+
+--
+-- Name: clingen_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.clingen_tmp (
+    id bigint NOT NULL,
+    symbol character varying(255),
+    hgnc_acc_id character varying(255),
+    haploinsufficiency character varying(255),
+    triplosensitivity character varying(255),
+    report character varying(255),
+    date timestamp without time zone
+);
+
+
+ALTER TABLE public.clingen_tmp OWNER TO batch_admin;
+
+
+--
+-- Name: clingen_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.clingen_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.clingen_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: clingen_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.clingen_tmp_id_seq OWNED BY public.clingen_tmp.id;
+
+
+--
+-- Name: clingen; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.clingen (
+    id bigint NOT NULL,
+    human_gene_id bigint,
+    haploinsufficiency character varying(255),
+    triplosensitivity character varying(255),
+    report character varying(255),
+    date timestamp without time zone
+);
+
+
+ALTER TABLE public.clingen OWNER TO batch_admin;
+
+--
+-- Name: clingen_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.clingen_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.clingen_id_seq OWNER TO batch_admin;
+
+--
+-- Name: clingen_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.clingen_id_seq OWNED BY public.clingen.id;
+
+
 --
 -- Name: mgi_gene; Type: TABLE; Schema: public; Owner: batch_admin
 --
@@ -621,6 +702,22 @@ ALTER TABLE ONLY public.idg ALTER COLUMN id SET DEFAULT nextval('public.idg_id_s
 
 
 --
+-- Name: clingen_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.clingen_tmp ALTER COLUMN id SET DEFAULT nextval('public.clingen_tmp_id_seq'::regclass);
+
+
+--
+-- Name: clingen id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.clingen ALTER COLUMN id SET DEFAULT nextval('public.clingen_id_seq'::regclass);
+
+
+
+
+--
 -- Name: hgnc_gene id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
 
@@ -704,6 +801,25 @@ ALTER TABLE ONLY public.idg_tmp
 
 ALTER TABLE ONLY public.idg
     ADD CONSTRAINT idg_pkey PRIMARY KEY (id);
+
+
+
+
+--
+-- Name: clingen_tmp clingen_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.clingen_tmp
+    ADD CONSTRAINT clingen_tmp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clingen clingen_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.clingen
+    ADD CONSTRAINT clingen_pkey PRIMARY KEY (id);
+
 
 
 
@@ -824,6 +940,18 @@ ALTER TABLE ONLY public.hcop
 
 ALTER TABLE ONLY public.idg
     ADD CONSTRAINT fk993i1het18j033e8a67r63t9 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+
+
+
+
+--
+-- Name: clingen fk963i1her18j033e8a67r63t2; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.clingen
+    ADD CONSTRAINT fk963i1her18j033e8a67r63t2 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+
+
 
 
 --
