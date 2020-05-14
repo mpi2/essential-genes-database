@@ -110,7 +110,7 @@ order by count desc"
 
 # IDG data 
 # Load the original IDG data into a temporary table.
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp (name, tdl, symbol, uniprot_acc_id, chr) FROM 'data/idg_out.txt' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp (name, tdl, symbol, uniprot_acc_id, chr) FROM '/mnt/idg_out.txt' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
 
 # Construct the final table - match on Uniprot IDs
 #
@@ -137,4 +137,4 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg
 
 # ClinGen data
 # The first 6 lines of the file describe the contents of the file, so need to be removed. 
-tail -n +6 gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM 'data/gene-dosage.csv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
+tail -n +6 gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM '/mnt/gene-dosage.csv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"

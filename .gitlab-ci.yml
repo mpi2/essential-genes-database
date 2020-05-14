@@ -122,6 +122,9 @@ Extra_data:
         
         # Fetch data files for the service
         
+        # IDG        
+        - cp "$CI_PROJECT_DIR"/data/idg_out.txt "$MOUNT_POINT"/idg_out.txt
+        
         # ClinGen
         - curl -sSLN -O https://search.clinicalgenome.org/kb/gene-dosage.csv
         
