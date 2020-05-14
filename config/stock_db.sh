@@ -108,5 +108,27 @@ h.mgi_gene_acc_id = mouse_gene.mgi_gene_acc_id
 GROUP BY list,count,human_gene.id, mouse_gene.id
 order by count desc"
 
+# IDG data 
+# Load the original IDG data into a temporary table.
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp (name, tdl, symbol, uniprot_acc_id, chr) FROM 'data/idg_out.txt' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
 
+# Construct the final table - match on Uniprot IDs
+#
+# Initial step based on exact match of Uniprot ID, assuming that only one ID is stored in the HGNC Uniprot_acc_ids field.
+# This migrates most of the data.
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.symbol, i.uniprot_acc_id, i.chr from idg_tmp i, hgnc_gene g, human_gene h where i.uniprot_acc_id=g.uniprot_acc_ids and g.id = h.hgnc_gene_id"
 
+# Second step to load the remaining data
+# (Note: The hgnc gene table contains an array of uniprot ids hence matching is based on array 'is contained by' function)
+# This is an expensive operation if carried out for all entries in idg_tmp takes several minutes to complete.
+# It is used here to finish migration of the data for cases where the HGNC entry has multiple 
+# Uniprot IDs separated by a '|' character.
+#
+# This approach misses one entry 'EPPIN-WFDC6 readthrough', which is a hybrid with references for two Uniprot ids that
+# also correspond to separate entries for EPPIN and WFDC6 that are already in the system. 
+# Running the array comparison method over all the data will load this entry.
+# 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.symbol, i.uniprot_acc_id, i.chr from ( select * from idg_tmp where uniprot_acc_id not in (select uniprot_acc_id from idg) ) as i, hgnc_gene g, human_gene h where string_to_array(i.uniprot_acc_id, '') <@ string_to_array(g.uniprot_acc_ids,'|') and g.id = h.hgnc_gene_id"
+
+# drop the temporary table
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg_tmp"
