@@ -132,3 +132,9 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO id
 
 # drop the temporary table
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg_tmp"
+
+
+
+# ClinGen data
+# The first 6 lines of the file describe the contents of the file, so need to be removed. 
+tail -n +6 gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM 'data/gene-dosage.csv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
