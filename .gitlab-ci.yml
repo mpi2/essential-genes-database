@@ -133,6 +133,10 @@ Extra_data:
         
         # DepMap Achilles_gene_effect.csv - DepMap Public 20Q2
         - curl -sSLN -O https://ndownloader.figshare.com/files/22629068
+        
+        # Process the Achilles_gene_effect.csv file
+        - awk -f "$CI_PROJECT_DIR"/scripts/transpose_rows_to_cols.awk 22629068 > achilles_gene_effect.col.csv
+        
 
     artifacts:
         paths:
