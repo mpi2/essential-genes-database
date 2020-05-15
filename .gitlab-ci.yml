@@ -138,7 +138,9 @@ Extra_data:
         - awk -f "$CI_PROJECT_DIR"/scripts/transpose_rows_to_cols.awk 22629068 > achilles_gene_effect.col.tsv
         
         # Format the achilles file for loading
-        - cat achilles_gene_effect.col.tsv | sed -e 's/ (/|/g' | sed -e 's/[)]./|/g' | sed -e 's/DepMap_ID.//g' > achilles_gene_effect.col.formatted.tsv
+        # In the main body sed replaces parenthesis and spaces around the entrez acc id with delimiters, and removes any trailing tab and space characters.
+        # In the header row that describes the cell lines the column heading DepMap_ID is removed with sed so the names can be loaded into a table.
+        - cat achilles_gene_effect.col.tsv | sed -e 's/ (/|/g' | sed -e 's/[)]./|/g' | sed -e 's/[[:space:]]\{1,\}$//g' | sed -e 's/DepMap_ID.//g' > achilles_gene_effect.col.formatted.tsv
         
 
     artifacts:
