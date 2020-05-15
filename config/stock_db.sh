@@ -138,3 +138,17 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg
 # ClinGen data
 # The first 6 lines of the file describe the contents of the file, so need to be removed. 
 tail -n +7 /mnt/gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM STDIN with (DELIMITER E',', FORMAT CSV, header FALSE)"
+
+
+# DepMap Achilles gene effect data
+# Load the names of the cell types
+head -n 1 /mnt/achilles_gene_effect.col.formatted.tsv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy achillies_cell_types (cell_type_names) FROM STDIN with (DELIMITER E'|', FORMAT CSV, header FALSE)"
+
+# Load the raw gene effect data
+tail -n +2 /mnt/achilles_gene_effect.col.formatted.tsv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy achilles_gene_effect_raw (symbol, entrez_acc_id, cell_type_data) FROM STDIN with (DELIMITER E'|', FORMAT CSV, header FALSE)"
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "update achilles_gene_effect_raw set cell_type_name_id = (select id from achillies_cell_types)"
+
+# Generate the table with the mean gene effect
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO achilles_gene_effect (human_gene_id, raw_data_id, entrez_acc_id, mean_gene_effect) 
+select h.id, a.id, a.entrez_acc_id, (select avg(unnest) from unnest(string_to_array(a.cell_type_data, E'\t','')::float[])) from human_gene h, achilles_gene_effect_raw a where a.entrez_acc_id = h.entrez_gene_acc_id"
