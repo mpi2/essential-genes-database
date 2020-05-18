@@ -139,6 +139,14 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg
 # The first 6 lines of the file describe the contents of the file, so need to be removed. 
 tail -n +7 /mnt/gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM STDIN with (DELIMITER E',', FORMAT CSV, header FALSE)"
 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO clingen (human_gene_id, t.haploinsufficiency, triplosensitivity, report, date) 
+select h.id, t.haploinsufficiency, t.triplosensitivity, t.report, t.date from human_gene h, clingen_tmp t where h.hgnc_acc_id = t.hgnc_acc_id"
+
+# drop the temporary table
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table clingen_tmp"
+
+
+
 
 # DepMap Achilles gene effect data
 # Load the names of the cell types
