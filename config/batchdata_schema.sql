@@ -485,6 +485,268 @@ ALTER SEQUENCE public.achilles_gene_effect_id_seq OWNED BY public.achilles_gene_
 
 
 
+
+
+
+--
+-- Name: impc_embryo_viability_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.impc_embryo_viability_tmp (
+    id bigint NOT NULL,
+    parameter_stable_id character varying(255),
+    project_id character varying(255),
+    project_name character varying(255),
+    procedure_group character varying(255),
+    procedure_stable_id character varying(255),
+    pipeline_stable_id character varying(255),
+    pipeline_name character varying(255),
+    phenotyping_center_id character varying(255),
+    phenotyping_center character varying(255),
+    developmental_stage_acc character varying(255),
+    developmental_stage_name character varying(255),
+    gene_symbol character varying(255),
+    gene_accession_id character varying(255),
+    colony_id character varying(255),
+    biological_sample_group character varying(255),
+    experiment_source_id character varying(255),
+    allele_accession_id character varying(255),
+    allele_symbol character varying(255),
+    allelic_composition character varying(255),
+    genetic_background character varying(255),
+    strain_accession_id character varying(255),
+    strain_name character varying(255),
+    zygosity character varying(255),
+    sex character varying(255),
+    category character varying(255),
+    parameter_name character varying(255),
+    procedure_name character varying(255)
+);
+
+
+ALTER TABLE public.impc_embryo_viability_tmp OWNER TO batch_admin;
+
+
+--
+-- Name: impc_embryo_viability_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.impc_embryo_viability_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.impc_embryo_viability_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: impc_embryo_viability_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.impc_embryo_viability_tmp_id_seq OWNED BY public.impc_embryo_viability_tmp.id;
+
+
+--
+-- Name: impc_embryo_viability; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.impc_embryo_viability (
+    id bigint NOT NULL,
+    mouse_gene_id bigint,
+    parameter_stable_id character varying(255),
+    project_id character varying(255),
+    project_name character varying(255),
+    procedure_group character varying(255),
+    procedure_stable_id character varying(255),
+    pipeline_stable_id character varying(255),
+    pipeline_name character varying(255),
+    phenotyping_center_id character varying(255),
+    phenotyping_center character varying(255),
+    developmental_stage_acc character varying(255),
+    developmental_stage_name character varying(255),
+    gene_symbol character varying(255),
+    gene_accession_id character varying(255),
+    colony_id character varying(255),
+    biological_sample_group character varying(255),
+    experiment_source_id character varying(255),
+    allele_accession_id character varying(255),
+    allele_symbol character varying(255),
+    allelic_composition character varying(255),
+    genetic_background character varying(255),
+    strain_accession_id character varying(255),
+    strain_name character varying(255),
+    zygosity character varying(255),
+    sex character varying(255),
+    category character varying(255),
+    parameter_name character varying(255),
+    procedure_name character varying(255)
+);
+
+
+ALTER TABLE public.impc_embryo_viability OWNER TO batch_admin;
+
+--
+-- Name: impc_embryo_viability_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.impc_embryo_viability_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.impc_embryo_viability_id_seq OWNER TO batch_admin;
+
+--
+-- Name: impc_embryo_viability_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.impc_embryo_viability_id_seq OWNED BY public.impc_embryo_viability.id;
+
+
+
+
+---
+
+
+
+
+
+
+--
+-- Name: impc_adult_viability_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.impc_adult_viability_tmp (
+    id bigint NOT NULL,
+    parameter_stable_id character varying(255),
+    project_id character varying(255),
+    project_name character varying(255),
+    procedure_group character varying(255),
+    procedure_stable_id character varying(255),
+    pipeline_stable_id character varying(255),
+    pipeline_name character varying(255),
+    phenotyping_center_id character varying(255),
+    phenotyping_center character varying(255),
+    developmental_stage_acc character varying(255),
+    developmental_stage_name character varying(255),
+    gene_symbol character varying(255),
+    gene_accession_id character varying(255),
+    colony_id character varying(255),
+    biological_sample_group character varying(255),
+    experiment_source_id character varying(255),
+    allele_accession_id character varying(255),
+    allele_symbol character varying(255),
+    allelic_composition character varying(255),
+    genetic_background character varying(255),
+    strain_accession_id character varying(255),
+    strain_name character varying(255),
+    zygosity character varying(255),
+    sex character varying(255),
+    category character varying(255),
+    parameter_name character varying(255),
+    procedure_name character varying(255)
+);
+
+
+ALTER TABLE public.impc_adult_viability_tmp OWNER TO batch_admin;
+
+
+--
+-- Name: impc_adult_viability_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.impc_adult_viability_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.impc_adult_viability_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: impc_adult_viability_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.impc_adult_viability_tmp_id_seq OWNED BY public.impc_adult_viability_tmp.id;
+
+
+--
+-- Name: impc_adult_viability; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.impc_adult_viability (
+    id bigint NOT NULL,
+    mouse_gene_id bigint,
+    parameter_stable_id character varying(255),
+    project_id character varying(255),
+    project_name character varying(255),
+    procedure_group character varying(255),
+    procedure_stable_id character varying(255),
+    pipeline_stable_id character varying(255),
+    pipeline_name character varying(255),
+    phenotyping_center_id character varying(255),
+    phenotyping_center character varying(255),
+    developmental_stage_acc character varying(255),
+    developmental_stage_name character varying(255),
+    gene_symbol character varying(255),
+    gene_accession_id character varying(255),
+    colony_id character varying(255),
+    biological_sample_group character varying(255),
+    experiment_source_id character varying(255),
+    allele_accession_id character varying(255),
+    allele_symbol character varying(255),
+    allelic_composition character varying(255),
+    genetic_background character varying(255),
+    strain_accession_id character varying(255),
+    strain_name character varying(255),
+    zygosity character varying(255),
+    sex character varying(255),
+    category character varying(255),
+    parameter_name character varying(255),
+    procedure_name character varying(255)
+);
+
+
+ALTER TABLE public.impc_adult_viability OWNER TO batch_admin;
+
+--
+-- Name: impc_adult_viability_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.impc_adult_viability_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.impc_adult_viability_id_seq OWNER TO batch_admin;
+
+--
+-- Name: impc_adult_viability_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.impc_adult_viability_id_seq OWNED BY public.impc_adult_viability.id;
+
+
+
+
+
+
+
+
 --
 -- Name: mgi_gene; Type: TABLE; Schema: public; Owner: batch_admin
 --
@@ -862,6 +1124,36 @@ ALTER TABLE ONLY public.achilles_gene_effect ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: impc_embryo_viability_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_embryo_viability_tmp ALTER COLUMN id SET DEFAULT nextval('public.impc_embryo_viability_tmp_id_seq'::regclass);
+
+
+--
+-- Name: impc_embryo_viability id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_embryo_viability ALTER COLUMN id SET DEFAULT nextval('public.impc_embryo_viability_id_seq'::regclass);
+
+
+
+--
+-- Name: impc_adult_viability_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_adult_viability_tmp ALTER COLUMN id SET DEFAULT nextval('public.impc_adult_viability_tmp_id_seq'::regclass);
+
+
+--
+-- Name: impc_adult_viability id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_adult_viability ALTER COLUMN id SET DEFAULT nextval('public.impc_adult_viability_id_seq'::regclass);
+
+
+
+--
 -- Name: hgnc_gene id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
 
@@ -990,6 +1282,42 @@ ALTER TABLE ONLY public.achilles_gene_effect_raw
 ALTER TABLE ONLY public.achilles_gene_effect
     ADD CONSTRAINT achilles_gene_effect_pkey PRIMARY KEY (id);
 
+
+
+
+
+--
+-- Name: impc_embryo_viability_tmp impc_embryo_viability_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_embryo_viability_tmp
+    ADD CONSTRAINT impc_embryo_viability_tmp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: impc_embryo_viability impc_embryo_viability_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_embryo_viability
+    ADD CONSTRAINT impc_embryo_viability_pkey PRIMARY KEY (id);
+
+
+
+
+--
+-- Name: impc_adult_viability_tmp impc_adult_viability_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_adult_viability_tmp
+    ADD CONSTRAINT impc_adult_viability_tmp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: impc_adult_viability impc_adult_viability_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_adult_viability
+    ADD CONSTRAINT impc_adult_viability_pkey PRIMARY KEY (id);
 
 
 
@@ -1148,6 +1476,27 @@ ALTER TABLE ONLY public.achilles_gene_effect
 
 ALTER TABLE ONLY public.achilles_gene_effect_raw
     ADD CONSTRAINT fk969u1heb18j099e8a67r63t8 FOREIGN KEY (cell_type_name_id) REFERENCES public.achillies_cell_types(id);
+
+
+
+
+--
+-- Name: impc_embryo_viability fk953i1eot18j033e8a67r63t7; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_embryo_viability
+    ADD CONSTRAINT fk953i1eot18j033e8a67r63t7 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
+
+
+
+--
+-- Name: impc_adult_viability fk929i1heu94j033e8a69r63a1; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_adult_viability
+    ADD CONSTRAINT fk929i1heu94j033e8a69r63a1 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
+
+
 
 
 

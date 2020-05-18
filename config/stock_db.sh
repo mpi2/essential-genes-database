@@ -152,3 +152,23 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "update achille
 # Generate the table with the mean gene effect
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO achilles_gene_effect (human_gene_id, raw_data_id, entrez_acc_id, mean_gene_effect) 
 select h.id, a.id, a.entrez_acc_id, (select avg(unnest) from unnest(string_to_array(a.cell_type_data, E'\t','')::float[])) from human_gene h, achilles_gene_effect_raw a where a.entrez_acc_id = h.entrez_gene_acc_id"
+
+# IMPC embryo viability data
+# Load
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_embryo_viability_tmp (parameter_stable_id, project_id, project_name, procedure_group, procedure_stable_id, pipeline_stable_id, pipeline_name, phenotyping_center_id, phenotyping_center, developmental_stage_acc, developmental_stage_name, gene_symbol, gene_accession_id, colony_id, biological_sample_group, experiment_source_id, allele_accession_id, allele_symbol, allelic_composition, genetic_background, strain_accession_id, strain_name, zygosity, sex, category, parameter_name, procedure_name) FROM embryo_viability.tsv with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO impc_embryo_viability (mouse_gene_id, parameter_stable_id, project_id, project_name, procedure_group, procedure_stable_id, pipeline_stable_id, pipeline_name, phenotyping_center_id, phenotyping_center, developmental_stage_acc, developmental_stage_name, gene_symbol, gene_accession_id, colony_id, biological_sample_group, experiment_source_id, allele_accession_id, allele_symbol, allelic_composition, genetic_background, strain_accession_id, strain_name, zygosity, sex, category, parameter_name, procedure_name) select m.id, t.parameter_stable_id, t.project_id, t.project_name, t.procedure_group, t.procedure_stable_id, t.pipeline_stable_id, t.pipeline_name, t.phenotyping_center_id, t.phenotyping_center, t.developmental_stage_acc, t.developmental_stage_name, t.gene_symbol, t.gene_accession_id, t.colony_id, t.biological_sample_group, t.experiment_source_id, t.allele_accession_id, t.allele_symbol, t.allelic_composition, t.genetic_background, t.strain_accession_id, t.strain_name, t.zygosity, t.sex, t.category, t.parameter_name, t.procedure_name from mouse_gene m, impc_embryo_viability_tmp t, where m.mgi_gene_acc_id = t.gene_accession_id"
+
+# drop the temporary table
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table impc_embryo_viability_tmp"
+
+
+# IMPC adult viability data
+# Load
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_adult_viability_tmp (parameter_stable_id, project_id, project_name, procedure_group, procedure_stable_id, pipeline_stable_id, pipeline_name, phenotyping_center_id, phenotyping_center, developmental_stage_acc, developmental_stage_name, gene_symbol, gene_accession_id, colony_id, biological_sample_group, experiment_source_id, allele_accession_id, allele_symbol, allelic_composition, genetic_background, strain_accession_id, strain_name, zygosity, sex, category, parameter_name, procedure_name) FROM adult_viability.tsv with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
+
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO impc_adult_viability (mouse_gene_id, parameter_stable_id, project_id, project_name, procedure_group, procedure_stable_id, pipeline_stable_id, pipeline_name, phenotyping_center_id, phenotyping_center, developmental_stage_acc, developmental_stage_name, gene_symbol, gene_accession_id, colony_id, biological_sample_group, experiment_source_id, allele_accession_id, allele_symbol, allelic_composition, genetic_background, strain_accession_id, strain_name, zygosity, sex, category, parameter_name, procedure_name) select m.id, t.parameter_stable_id, t.project_id, t.project_name, t.procedure_group, t.procedure_stable_id, t.pipeline_stable_id, t.pipeline_name, t.phenotyping_center_id, t.phenotyping_center, t.developmental_stage_acc, t.developmental_stage_name, t.gene_symbol, t.gene_accession_id, t.colony_id, t.biological_sample_group, t.experiment_source_id, t.allele_accession_id, t.allele_symbol, t.allelic_composition, t.genetic_background, t.strain_accession_id, t.strain_name, t.zygosity, t.sex, t.category, t.parameter_name, t.procedure_name from mouse_gene m, impc_adult_viability_tmp t, where m.mgi_gene_acc_id = t.gene_accession_id"
+
+# drop the temporary table
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table impc_adult_viability_tmp"
