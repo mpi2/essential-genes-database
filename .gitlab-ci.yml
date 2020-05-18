@@ -158,8 +158,8 @@ IMPC_Adult_Viability:
         - apk add --update --no-cache curl
         - apk add --update --no-cache jq
     script:
-        - "$CI_PROJECT_DIR"/scripts/extract_impc_solr_data.sh
-        
+        - source "$CI_PROJECT_DIR"/scripts/extract_impc_solr_data.sh
+
 
 
 #
