@@ -4,8 +4,6 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$DIR"/solr_query_functions.sh
 
-declare -f fetch_facet_pivot_data
-
 
 set_statistical-result_core_url()
 {
