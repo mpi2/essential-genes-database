@@ -81,3 +81,49 @@ process_parameter()
     
     fi;
 }
+
+
+
+fetch_facet_pivot_data()
+{
+    if [ "$#" -ne 3 ]; then
+        error_exit "Usage: fetch_facet_pivot_data url jq_filter_attributes output_filename";
+    fi;
+    
+    core_url="$1"
+    jq_filter_attributes="$2"
+    output_file="$3"
+    
+    # Obtain the status code with the response
+    # see : https://stackoverflow.com/questions/38906626/curl-to-return-http-status-code-along-with-the-response
+    
+    data=$(curl -sSLN -w "%{http_code}" "$core_url")
+    check_http_status_code "$data"
+    
+    # Remove the 200 status code from the end of the response and process
+    json=${data%200}
+    
+    printf '%s' $json | \
+    jq '[.facet_counts .facet_pivot[]?[]? | '"$jq_filter_attributes"' ]' |
+    jq -r '(.[0] | keys_unsorted) as $keys |
+            map([.[ $keys[] ]])[] |
+            @tsv' >> "$output_file";
+}
+
+
+
+
+process_facet_pivot_query()
+{
+    if [ "$#" -ne 4 ]; then
+        error_exit "Usage: process_facet_pivot_query solr_core_url query_string jq_filter_attributes output_filename.";
+    fi
+    
+    core_url="$1"
+    query="$2"
+    jq_filter_attributes="$3"
+    output="$4"
+    
+    url="$core_url""$query";
+    fetch_facet_pivot_data "$url" "$jq_filter_attributes" "$output";
+}
