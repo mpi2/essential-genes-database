@@ -204,3 +204,12 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO im
 
 # drop the temporary table
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table impc_significant_phenotype_tmp"
+
+
+
+
+
+
+# IMPC proceedure data
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_proceedure_count (phenotyping_center, procedure_stable_id, count) FROM '/mnt/impc_proceedures_by_centre.tsv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
+
