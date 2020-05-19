@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-source solr_query_functions.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "$DIR"/solr_query_functions.sh
 
 set_experiment_core_url()
 {
