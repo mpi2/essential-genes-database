@@ -189,6 +189,7 @@ Synonym-formatting:
         - HGNC_data
         - MGI_data
         - Extra_data
+        - IMPC_Adult_Viability
     artifacts:
         paths:
             - "$MOUNT_POINT/"
