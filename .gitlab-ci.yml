@@ -264,6 +264,7 @@ build_image:
         - echo "${CI_REGISTRY_IMAGE}":"${NOW}"
 
         - docker commit batchdbcontainer "${CI_REGISTRY_IMAGE}":"${NOW}"
+        
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${CI_REGISTRY_IMAGE}":latest
         - docker push "${CI_REGISTRY_IMAGE}"  | tee ${MOUNT_POINT}/push.log
 
@@ -276,7 +277,9 @@ build_image:
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}":latest
         - docker push "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}"  | tee ${MOUNT_POINT}/dockerhub-push-latest.log
 
-        - docker logout       
+        - docker logout
+        - source ${MOUNT_POINT}/postgres_processing_time.sh
+
 
     dependencies:
         - Synonym-formatting

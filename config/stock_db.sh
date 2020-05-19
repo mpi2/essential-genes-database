@@ -21,6 +21,7 @@ set -e
 # Unix socket connections made inside the container.
 
 
+printf '#! /usr/bin/bash\nstart=%s\n' $(date +"%s") > /mnt/postgres_processing_time.sh
 
 # HGNC_data_load.txt
 
@@ -213,3 +214,6 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table imp
 # IMPC proceedure data
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_proceedure_count (phenotyping_center, procedure_stable_id, count) FROM '/mnt/impc_proceedures_by_centre.tsv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
 
+printf 'end=%s\n' $(date +"%s") >> /mnt/postgres_processing_time.sh
+printf "echo -n 'Postgresql processing time: '\n" >> /mnt/postgres_processing_time.sh
+echo 'printf "'"%d s\n"'" $(( $end - $start ))'   >> /mnt/postgres_processing_time.sh
