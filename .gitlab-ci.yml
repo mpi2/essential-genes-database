@@ -265,7 +265,7 @@ build_image:
         - echo "-------------"
         - echo
         - docker exec batchdbcontainer sh /usr/local/data/postgres_processing_time.sh
-        - docker exec batchdbcontainer -c "rm -r /usr/local/data"
+        - docker exec batchdbcontainer sh -c "rm -r /usr/local/data"
         - echo
         - echo "-------------"
         - echo
