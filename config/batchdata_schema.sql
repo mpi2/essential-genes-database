@@ -938,6 +938,44 @@ ALTER SEQUENCE public.impc_proceedure_count_id_seq OWNED BY public.impc_proceedu
 
 
 --
+-- Name: fusil; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.fusil (
+    id bigint NOT NULL,
+    mouse_gene_id bigint,
+    bin character varying(255)
+);
+
+
+ALTER TABLE public.fusil OWNER TO batch_admin;
+
+--
+-- Name: fusil_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.fusil_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.fusil_id_seq OWNER TO batch_admin;
+
+--
+-- Name: fusil_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.fusil_id_seq OWNED BY public.fusil.id;
+
+
+
+
+
+
+--
 -- Name: mgi_gene; Type: TABLE; Schema: public; Owner: batch_admin
 --
 
@@ -1366,6 +1404,14 @@ ALTER TABLE ONLY public.impc_proceedure_count ALTER COLUMN id SET DEFAULT nextva
 
 
 
+--
+-- Name: fusil id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.fusil ALTER COLUMN id SET DEFAULT nextval('public.fusil_id_seq'::regclass);
+
+
+
 
 --
 -- Name: hgnc_gene id; Type: DEFAULT; Schema: public; Owner: batch_admin
@@ -1561,6 +1607,15 @@ ALTER TABLE ONLY public.impc_proceedure_count
 
 
 
+--
+-- Name: fusil fusil_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.fusil
+    ADD CONSTRAINT fusil_pkey PRIMARY KEY (id);
+
+
+
 
 --
 -- Name: hgnc_gene hgnc_gene_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
@@ -1744,6 +1799,16 @@ ALTER TABLE ONLY public.impc_adult_viability
 
 ALTER TABLE ONLY public.impc_significant_phenotype
     ADD CONSTRAINT fk489a8hau92y052e8a69r61e7 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
+
+
+
+
+--
+-- Name: fusil fk427m9tau92y023e8a69r54e9; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.fusil
+    ADD CONSTRAINT fk427m9tau92y023e8a69r54e9 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
 
 
 
