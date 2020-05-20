@@ -278,7 +278,7 @@ build_image:
         - docker push "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}"  | tee ${MOUNT_POINT}/dockerhub-push-latest.log
 
         - docker logout
-        - source ${MOUNT_POINT}/postgres_processing_time.sh
+        - docker exec -it batchdbcontainer sh /usr/local/bin/postgres_processing_time.sh
 
 
     dependencies:
