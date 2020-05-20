@@ -279,11 +279,6 @@ build_image:
 
         - docker logout
         
-        - docker run --name reportcontainer -d "${CI_REGISTRY_IMAGE}":"${NOW}"
-        - docker exec reportcontainer sh /usr/local/bin/postgres_processing_time.sh
-        - docker stop reportcontainer
-        - docker rm reportcontainer
-
 
     dependencies:
         - Synonym-formatting
