@@ -259,7 +259,7 @@ build_image:
         # when it is built, but this is not trivial in this build system, and a downside  would be
         # that every time the container starts there would always be a lag while the data was loaded.
         #
-        - sleep 900
+        - sleep 400
 
         - echo
         - echo "-------------"
