@@ -51,13 +51,15 @@ obtain_embryo_viability_data()
     
     set_jq_filter_attributes_for_viability;
     
+    documents_per_request=1000
+    
     output_filename='embryo_viability.tsv';
     
     for id in "${paramenter_stable_ids[@]/#/$query}";
     do
         query_string="$id";
         echo "$query_string"
-        process_parameter "$core_url" "$query_string" "$jq_filter_attributes" "$output_filename";
+        process_parameter "$core_url" "$query_string" "$jq_filter_attributes" $documents_per_request "$output_filename";
     done
 }
 
@@ -71,13 +73,15 @@ obtain_adult_viability_data()
     
     set_jq_filter_attributes_for_viability;
     
+    documents_per_request=1000
+    
     output_filename='adult_viability.tsv';
     
     for id in "${paramenter_stable_ids[@]/#/$query}";
     do
         query_string="$id";
         echo "$query_string"
-        process_parameter "$core_url" "$query_string" "$jq_filter_attributes" "$output_filename";
+        process_parameter "$core_url" "$query_string" "$jq_filter_attributes" $documents_per_request "$output_filename";
     done
 }
 

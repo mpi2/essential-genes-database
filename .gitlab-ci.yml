@@ -209,6 +209,26 @@ IMPC_Proceedures:
 
 
 
+IMPC_Stats:
+    image: ubuntu:latest
+    stage: download
+    before_script:
+        - apt-get update && apt-get install -y jq curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+    script:
+        
+        # Establish a data directory
+        - mkdir -p "$MOUNT_POINT"
+        - cd "$MOUNT_POINT"
+        
+        - source "$CI_PROJECT_DIR"/scripts/extract_impc_stats_data.sh
+        
+
+    artifacts:
+        paths:
+            - "$MOUNT_POINT/"
+
+
+
 #
 # Data formatting stage
 #
@@ -232,6 +252,7 @@ Synonym-formatting:
         - IMPC_Viability
         - IMPC_Phenotypes
         - IMPC_Proceedures
+        - IMPC_Stats
     artifacts:
         paths:
             - "$MOUNT_POINT/"
@@ -259,16 +280,10 @@ build_image:
         # when it is built, but this is not trivial in this build system, and a downside  would be
         # that every time the container starts there would always be a lag while the data was loaded.
         #
-        - sleep 400
+        - sleep 600
 
-        - echo
-        - echo "-------------"
-        - echo
         - docker exec batchdbcontainer sh /usr/local/data/postgres_processing_time.sh
         - docker exec batchdbcontainer sh -c "rm -r /usr/local/data"
-        - echo
-        - echo "-------------"
-        - echo
         
         - echo "${CI_REGISTRY_IMAGE}":"${NOW}"
         - docker commit batchdbcontainer "${CI_REGISTRY_IMAGE}":"${NOW}"

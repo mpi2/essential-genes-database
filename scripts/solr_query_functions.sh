@@ -47,17 +47,17 @@ fetch_data()
 
 process_parameter()
 {
-    if [ "$#" -ne 4 ]; then
-        error_exit "Usage: process_parameter solr_core_url query_string jq_filter_attributes output_filename.";
+    if [ "$#" -ne 5 ]; then
+        error_exit "Usage: process_parameter solr_core_url query_string jq_filter_attributes documents_per_request output_filename.";
     fi
     
     core_url="$1"
     query="$2"
     jq_filter_attributes="$3"
-    output="$4"
+    step="$4"
+    output="$5"
     
     num=$(curl -sSLN "$core_url""$query"'&rows=0' | jq '.response.numFound')
-    step=500
     
     if [ "$num" != "" ]; then
     

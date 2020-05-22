@@ -60,9 +60,11 @@ obtain_phenotype_data()
     
     set_jq_filter_attributes_for_phenotypes;
     
+    documents_per_request=1000
+    
     output_filename='impc_phenotype_data.tsv';
     
-    process_parameter "$core_url" "$query_string" "$jq_filter_attributes" "$output_filename";
+    process_parameter "$core_url" "$query_string" "$jq_filter_attributes" $documents_per_request "$output_filename";
 
 }
 
