@@ -266,6 +266,7 @@ build_image:
         - echo "export NOW=${NOW}" > ${MOUNT_POINT}/datetime.env
     script:
 
+        - export
         - source ${MOUNT_POINT}/datetime.env
         - echo ${NOW}
         - docker build -t batchdownload-db .  | tee ${MOUNT_POINT}/build.log
