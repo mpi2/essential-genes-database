@@ -272,15 +272,13 @@ build_image:
         - docker run --name batchdbcontainer -v "$MOUNT_POINT:/mnt" -d batchdownload-db
 
         # Time is required to load the data
-        #
-        # This is potential problem as the time taken to complete the data load cannot be established
         # Hence the long pause period. 
         #
         # An alternative would be to copy the data required into to the image
         # when it is built, but this is not trivial in this build system, and a downside  would be
         # that every time the container starts there would always be a lag while the data was loaded.
-        #
-        - sleep 600
+        
+        - sleep 400
 
         - docker exec batchdbcontainer sh /usr/local/data/postgres_processing_time.sh
         - docker exec batchdbcontainer sh -c "rm -r /usr/local/data"
