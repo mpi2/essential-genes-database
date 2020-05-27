@@ -54,7 +54,7 @@ obtain_stats_data()
 {
     set_stats_core_url;
     
-    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:Success%20AND%20project_name:IMPC%20AND%20mp_term_id:*%20AND%20zygosity:homozygote%20AND%20life_stage_name:%22Early%20adult%22';
+    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:Success%20AND%20mp_term_id:*%20AND%20zygosity:homozygote%20AND%20life_stage_name:%22Early%20adult%22';
 
     set_jq_filter_attributes;
     
