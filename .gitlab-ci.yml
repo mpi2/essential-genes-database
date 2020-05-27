@@ -279,7 +279,7 @@ build_image:
         # when it is built, but this is not trivial in this build system, and a downside  would be
         # that every time the container starts there would always be a lag while the data was loaded.
         
-        - sleep 600
+        - sleep "${DB_LOAD_TIME}"
 
         - docker exec batchdbcontainer sh /usr/local/data/postgres_processing_time.sh
         - docker exec batchdbcontainer sh -c "rm -r /usr/local/data"
