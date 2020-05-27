@@ -69,7 +69,7 @@ obtain_adult_viability_data()
     
     query='?q=parameter_stable_id:';
     
-    declare -a paramenter_stable_ids=("IMPC_VIA_001_001" "IMPC_VIA_002_001");
+    declare -a paramenter_stable_ids=("IMPC_VIA_001_001");
     
     set_jq_filter_attributes_for_viability;
     
