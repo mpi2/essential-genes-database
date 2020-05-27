@@ -83,8 +83,10 @@ WHERE mouse_gene.mgi_gene_acc_id = mouse_gene_synonym.mgi_gene_acc_id"
 
 
 
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO human_gene (symbol,name,hgnc_acc_id,hgnc_gene_id,ensembl_gene_acc_id,entrez_gene_acc_id) 
-SELECT symbol,name,hgnc_acc_id,id,ensembl_gene_acc_id,entrez_acc_id from hgnc_gene"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO human_gene (symbol,name,hgnc_acc_id,ensembl_gene_acc_id,entrez_gene_acc_id) 
+SELECT symbol,name,hgnc_acc_id,id,ensembl_gene_acc_id,entrez_acc_id from hgnc_gene where locus_type != 'readthrough'"
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE hgnc_gene SET human_gene_id = (select h.id from human_gene h where h.hgnc_acc_id=hgnc_gene.hgnc_acc_id)"
 
 
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO human_gene_synonym_relation (human_gene_id, human_gene_synonym_id) 
@@ -117,7 +119,7 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp 
 #
 # Initial step based on exact match of Uniprot ID, assuming that only one ID is stored in the HGNC Uniprot_acc_ids field.
 # This migrates most of the data.
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.symbol, i.uniprot_acc_id, i.chr from idg_tmp i, hgnc_gene g, human_gene h where i.uniprot_acc_id=g.uniprot_acc_ids and g.id = h.hgnc_gene_id"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.symbol, i.uniprot_acc_id, i.chr from idg_tmp i, hgnc_gene g, human_gene h where i.uniprot_acc_id=g.uniprot_acc_ids and g.human_gene_id = h.id"
 
 # Second step to load the remaining data
 # (Note: The hgnc gene table contains an array of uniprot ids hence matching is based on array 'is contained by' function)
@@ -129,7 +131,7 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO id
 # also correspond to separate entries for EPPIN and WFDC6 that are already in the system. 
 # Running the array comparison method over all the data will load this entry.
 # 
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.symbol, i.uniprot_acc_id, i.chr from ( select * from idg_tmp where uniprot_acc_id not in (select uniprot_acc_id from idg) ) as i, hgnc_gene g, human_gene h where string_to_array(i.uniprot_acc_id, '') <@ string_to_array(g.uniprot_acc_ids,'|') and g.id = h.hgnc_gene_id"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.symbol, i.uniprot_acc_id, i.chr from ( select * from idg_tmp where uniprot_acc_id not in (select uniprot_acc_id from idg) ) as i, hgnc_gene g, human_gene h where string_to_array(i.uniprot_acc_id, '') <@ string_to_array(g.uniprot_acc_ids,'|') and g.human_gene_id = h.id"
 
 # drop the temporary table
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg_tmp"

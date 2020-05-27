@@ -28,6 +28,7 @@ GRANT ALL ON schema public TO batch_admin;
 
 CREATE TABLE public.hgnc_gene (
     id bigint NOT NULL,
+    human_gene_id bigint,
     agr_acc_id character varying(255),
     alias_name text,
     alias_symbol character varying(255),
@@ -1340,7 +1341,6 @@ ALTER TABLE public.mouse_gene_synonym_relation OWNER TO batch_admin;
 
 CREATE TABLE public.human_gene (
     id bigint NOT NULL,
-    hgnc_gene_id bigint NOT NULL,
     hgnc_acc_id character varying(255) NOT NULL,
     name character varying(255) NOT NULL,
     symbol character varying(255) NOT NULL,
@@ -1906,11 +1906,8 @@ ALTER TABLE ONLY public.ortholog
 -- Name: human_gene fk194i1het18j033e8a67r40g1; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
 --
 
-ALTER TABLE ONLY public.human_gene
-    ADD CONSTRAINT human_gene_hgnc_gene_id_unique UNIQUE (hgnc_gene_id);
-
-ALTER TABLE ONLY public.human_gene
-    ADD CONSTRAINT fk194i1het18j033e8a67r40g1 FOREIGN KEY (hgnc_gene_id) REFERENCES public.hgnc_gene(id);
+ALTER TABLE ONLY public.hgnc_gene
+    ADD CONSTRAINT fk194i1het18j033e8a67r40g1 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
 
 
 
