@@ -2070,16 +2070,6 @@ ALTER TABLE ONLY public.impc_significant_phenotype
 
 
 --
--- Name: impc_statistical_result fk826i1uej82i044e8a69r57e3; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
---
-
-ALTER TABLE ONLY public.impc_statistical_result
-    ADD CONSTRAINT fk826i1uej82i044e8a69r57e3 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
-
-
-
-
---
 -- Name: impc_count fk278i4uwt83i016e9b69r73a1; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
 --
 
