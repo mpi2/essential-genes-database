@@ -904,69 +904,69 @@ ALTER SEQUENCE public.impc_significant_phenotype_id_seq OWNED BY public.impc_sig
 
 
 
-CREATE TABLE public.impc_statistical_result_tmp (
-    id bigint NOT NULL,
-    doc_id character varying(255),
-    db_id bigint,
-    data_type character varying(255),
-    mp_term_id character varying(255),
-    mp_term_name character varying(255),
-    top_level_mp_term_ids text,
-    top_level_mp_term_names text,
-    life_stage_acc character varying(255),
-    life_stage_name character varying(255),
-    project_name character varying(255),
-    phenotyping_center character varying(255),
-    pipeline_stable_id character varying(255),
-    pipeline_stable_key bigint,
-    pipeline_name character varying(255),
-    pipeline_id bigint,
-    procedure_stable_id character varying(255),
-    procedure_stable_key bigint,
-    procedure_name character varying(255),
-    procedure_id bigint,
-    parameter_stable_id character varying(255),
-    parameter_stable_key bigint,
-    parameter_name character varying(255),
-    parameter_id bigint,
-    colony_id character varying(255),
-    impc_marker_symbol character varying(255),
-    impc_marker_accession_id character varying(255),
-    impc_allele_symbol character varying(255),
-    impc_allele_name text,
-    impc_allele_accession_id character varying(255),
-    impc_strain_name character varying(255),
-    impc_strain_accession_id character varying(255),
-    genetic_background character varying(255),
-    zygosity character varying(255),
-    status character varying(255),
-    p_value float8,
-    significant boolean
-);
-
-
-ALTER TABLE public.impc_statistical_result_tmp OWNER TO batch_admin;
+-- CREATE TABLE public.impc_statistical_result_tmp (
+--     id bigint NOT NULL,
+--     doc_id character varying(255),
+--     db_id bigint,
+--     data_type character varying(255),
+--     mp_term_id character varying(255),
+--     mp_term_name character varying(255),
+--     top_level_mp_term_ids text,
+--     top_level_mp_term_names text,
+--     life_stage_acc character varying(255),
+--     life_stage_name character varying(255),
+--     project_name character varying(255),
+--     phenotyping_center character varying(255),
+--     pipeline_stable_id character varying(255),
+--     pipeline_stable_key bigint,
+--     pipeline_name character varying(255),
+--     pipeline_id bigint,
+--     procedure_stable_id character varying(255),
+--     procedure_stable_key bigint,
+--     procedure_name character varying(255),
+--     procedure_id bigint,
+--     parameter_stable_id character varying(255),
+--     parameter_stable_key bigint,
+--     parameter_name character varying(255),
+--     parameter_id bigint,
+--     colony_id character varying(255),
+--     impc_marker_symbol character varying(255),
+--     impc_marker_accession_id character varying(255),
+--     impc_allele_symbol character varying(255),
+--     impc_allele_name text,
+--     impc_allele_accession_id character varying(255),
+--     impc_strain_name character varying(255),
+--     impc_strain_accession_id character varying(255),
+--     genetic_background character varying(255),
+--     zygosity character varying(255),
+--     status character varying(255),
+--     p_value float8,
+--     significant boolean
+-- );
+-- 
+-- 
+-- ALTER TABLE public.impc_statistical_result_tmp OWNER TO batch_admin;
 
 
 --
 -- Name: impc_statistical_result_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
 --
 
-CREATE SEQUENCE public.impc_statistical_result_tmp_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+-- CREATE SEQUENCE public.impc_statistical_result_tmp_id_seq
+--     START WITH 1
+--     INCREMENT BY 1
+--     NO MINVALUE
+--     NO MAXVALUE
+--     CACHE 1;
 
 
-ALTER TABLE public.impc_statistical_result_tmp_id_seq OWNER TO batch_admin;
+-- ALTER TABLE public.impc_statistical_result_tmp_id_seq OWNER TO batch_admin;
 
 --
 -- Name: impc_statistical_result_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
 --
 
-ALTER SEQUENCE public.impc_statistical_result_tmp_id_seq OWNED BY public.impc_statistical_result_tmp.id;
+-- ALTER SEQUENCE public.impc_statistical_result_tmp_id_seq OWNED BY public.impc_statistical_result_tmp.id;
 
 
 --
@@ -975,7 +975,6 @@ ALTER SEQUENCE public.impc_statistical_result_tmp_id_seq OWNED BY public.impc_st
 
 CREATE TABLE public.impc_statistical_result (
     id bigint NOT NULL,
-    mouse_gene_id bigint,
     doc_id character varying(255),
     db_id bigint,
     data_type character varying(255),
@@ -1036,6 +1035,66 @@ ALTER TABLE public.impc_statistical_result_id_seq OWNER TO batch_admin;
 --
 
 ALTER SEQUENCE public.impc_statistical_result_id_seq OWNED BY public.impc_statistical_result.id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--
+-- Name: impc_count; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.impc_count (
+    id bigint NOT NULL,
+    mouse_gene_id bigint,
+    impc_marker_symbol character varying(255),
+    impc_marker_accession_id character varying(255),
+    impc_allele_symbol character varying(255),
+    impc_allele_accession_id character varying(255),
+    successful_parameter_count bigint,
+    total_procedure_count bigint,
+    homozygous_total_procedure_count bigint,
+    significant_procedure_count bigint,
+    homozygous_significant_procedure_count bigint
+);
+
+
+ALTER TABLE public.impc_count OWNER TO batch_admin;
+
+--
+-- Name: impc_count_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.impc_count_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.impc_count_id_seq OWNER TO batch_admin;
+
+--
+-- Name: impc_count_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.impc_count_id_seq OWNED BY public.impc_count.id;
+
+
 
 
 
@@ -1557,7 +1616,7 @@ ALTER TABLE ONLY public.impc_significant_phenotype ALTER COLUMN id SET DEFAULT n
 -- Name: impc_statistical_result_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
 
-ALTER TABLE ONLY public.impc_statistical_result_tmp ALTER COLUMN id SET DEFAULT nextval('public.impc_statistical_result_tmp_id_seq'::regclass);
+-- ALTER TABLE ONLY public.impc_statistical_result_tmp ALTER COLUMN id SET DEFAULT nextval('public.impc_statistical_result_tmp_id_seq'::regclass);
 
 
 --
@@ -1567,6 +1626,13 @@ ALTER TABLE ONLY public.impc_statistical_result_tmp ALTER COLUMN id SET DEFAULT 
 ALTER TABLE ONLY public.impc_statistical_result ALTER COLUMN id SET DEFAULT nextval('public.impc_statistical_result_id_seq'::regclass);
 
 
+
+
+--
+-- Name: impc_count id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_count ALTER COLUMN id SET DEFAULT nextval('public.impc_count_id_seq'::regclass);
 
 
 --
@@ -1778,8 +1844,8 @@ ALTER TABLE ONLY public.impc_significant_phenotype
 -- Name: impc_statistical_result_tmp impc_statistical_result_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
 --
 
-ALTER TABLE ONLY public.impc_statistical_result_tmp
-    ADD CONSTRAINT impc_statistical_result_tmp_pkey PRIMARY KEY (id);
+-- ALTER TABLE ONLY public.impc_statistical_result_tmp
+--     ADD CONSTRAINT impc_statistical_result_tmp_pkey PRIMARY KEY (id);
 
 
 --
@@ -1788,6 +1854,14 @@ ALTER TABLE ONLY public.impc_statistical_result_tmp
 
 ALTER TABLE ONLY public.impc_statistical_result
     ADD CONSTRAINT impc_statistical_result_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: impc_count impc_count_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_count
+    ADD CONSTRAINT impc_count_pkey PRIMARY KEY (id);
 
 
 
@@ -2001,6 +2075,16 @@ ALTER TABLE ONLY public.impc_significant_phenotype
 
 ALTER TABLE ONLY public.impc_statistical_result
     ADD CONSTRAINT fk826i1uej82i044e8a69r57e3 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
+
+
+
+
+--
+-- Name: impc_count fk278i4uwt83i016e9b69r73a1; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_count
+    ADD CONSTRAINT fk278i4uwt83i016e9b69r73a1 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
 
 
 
