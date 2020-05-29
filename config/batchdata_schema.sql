@@ -1064,18 +1064,12 @@ CREATE TABLE public.impc_count (
     impc_marker_accession_id character varying(255),
     impc_allele_symbol character varying(255),
     impc_allele_accession_id character varying(255),
-    successful_parameter_count bigint,
-    total_procedure_count bigint,
-    homozygous_total_procedure_count bigint,
-    significant_procedure_count bigint,
-    homozygous_significant_procedure_count bigint
+    successful_parameter_count bigint DEFAULT 0,
+    total_procedure_count bigint DEFAULT 0,
+    homozygous_total_procedure_count bigint DEFAULT 0,
+    significant_procedure_count bigint DEFAULT 0,
+    homozygous_significant_procedure_count bigint DEFAULT 0
 );
-
-ALTER TABLE ONLY impc_count ALTER COLUMN successful_parameter_count SET DEFAULT 0;
-ALTER TABLE ONLY impc_count ALTER COLUMN total_procedure_count SET DEFAULT 0;
-ALTER TABLE ONLY impc_count ALTER COLUMN homozygous_total_procedure_count SET DEFAULT 0;
-ALTER TABLE ONLY impc_count ALTER COLUMN significant_procedure_count SET DEFAULT 0;
-ALTER TABLE ONLY impc_count ALTER COLUMN homozygous_significant_procedure_count SET DEFAULT 0;
 
 
 ALTER TABLE public.impc_count OWNER TO batch_admin;
