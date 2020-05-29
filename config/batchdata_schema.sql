@@ -1071,6 +1071,12 @@ CREATE TABLE public.impc_count (
     homozygous_significant_procedure_count bigint
 );
 
+ALTER TABLE ONLY impc_count ALTER COLUMN successful_parameter_count SET DEFAULT 0;
+ALTER TABLE ONLY impc_count ALTER COLUMN total_procedure_count SET DEFAULT 0;
+ALTER TABLE ONLY impc_count ALTER COLUMN homozygous_total_procedure_count SET DEFAULT 0;
+ALTER TABLE ONLY impc_count ALTER COLUMN significant_procedure_count SET DEFAULT 0;
+ALTER TABLE ONLY impc_count ALTER COLUMN homozygous_significant_procedure_count SET DEFAULT 0;
+
 
 ALTER TABLE public.impc_count OWNER TO batch_admin;
 
@@ -1160,7 +1166,8 @@ ALTER SEQUENCE public.impc_proceedure_count_id_seq OWNED BY public.impc_proceedu
 CREATE TABLE public.fusil (
     id bigint NOT NULL,
     mouse_gene_id bigint,
-    bin character varying(255)
+    bin character varying(255),
+    bin_code character varying(255)
 );
 
 
