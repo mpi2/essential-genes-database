@@ -488,6 +488,230 @@ ALTER SEQUENCE public.achilles_gene_effect_id_seq OWNED BY public.achilles_gene_
 
 
 
+--
+-- Name: gnomad_plof_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.gnomad_plof_tmp (
+    id bigint NOT NULL,
+    gene_symbol character varying(255),
+    transcript character varying(255),
+    obs_mis bigint,
+    exp_mis double precision,
+    oe_mis double precision,
+    mu_mis double precision,
+    possible_mis bigint,
+    obs_mis_pphen bigint,
+    exp_mis_pphen double precision,
+    oe_mis_pphen double precision,
+    possible_mis_pphen bigint,
+    obs_syn bigint,
+    exp_syn double precision,
+    oe_syn double precision,
+    mu_syn double precision,
+    possible_syn bigint,
+    obs_lof bigint,
+    mu_lof double precision,
+    possible_lof bigint,
+    exp_lof double precision,
+    pLI double precision,
+    pNull double precision,
+    pRec double precision,
+    oe_lof double precision,
+    oe_syn_lower double precision,
+    oe_syn_upper double precision,
+    oe_mis_lower double precision,
+    oe_mis_upper double precision,
+    oe_lof_lower double precision,
+    oe_lof_upper double precision,
+    constraint_flag character varying(2048),
+    syn_z double precision,
+    mis_z double precision,
+    lof_z   double precision,
+    oe_lof_upper_rank bigint,
+    oe_lof_upper_bin bigint,
+    oe_lof_upper_bin_6 bigint,
+    n_sites bigint,
+    classic_caf double precision,
+    max_af double precision,
+    no_lofs bigint,
+    obs_het_lof bigint,
+    obs_hom_lof bigint,
+    defined bigint,
+    p double precision,
+    exp_hom_lof double precision,
+    classic_caf_afr double precision,
+    classic_caf_amr double precision,
+    classic_caf_asj double precision,
+    classic_caf_eas double precision,
+    classic_caf_fin double precision,
+    classic_caf_nfe double precision,
+    classic_caf_oth double precision,
+    classic_caf_sas double precision,
+    p_afr double precision,
+    p_amr double precision,
+    p_asj double precision,
+    p_eas double precision,
+    p_fin double precision,
+    p_nfe double precision,
+    p_oth double precision,
+    p_sas double precision,
+    transcript_type character varying(255),
+    gene_id character varying(255),
+    transcript_level bigint,
+    cds_length bigint,
+    num_coding_exons bigint,
+    gene_type character varying(255),
+    gene_length bigint,
+    exac_pLI double precision,
+    exac_obs_lof bigint,
+    exac_exp_lof double precision,
+    exac_oe_lof double precision,
+    brain_expression character varying(255),
+    chromosome character varying(255),
+    start_position bigint,
+    end_position bigint
+);
+
+
+ALTER TABLE public.gnomad_plof_tmp OWNER TO batch_admin;
+
+
+--
+-- Name: gnomad_plof_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.gnomad_plof_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.gnomad_plof_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: gnomad_plof_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.gnomad_plof_tmp_id_seq OWNED BY public.gnomad_plof_tmp.id;
+
+
+--
+-- Name: gnomad_plof; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.gnomad_plof (
+    id bigint NOT NULL,
+    human_gene_id bigint,
+    gene_symbol character varying(255),
+    transcript character varying(255),
+    obs_mis bigint,
+    exp_mis double precision,
+    oe_mis double precision,
+    mu_mis double precision,
+    possible_mis bigint,
+    obs_mis_pphen bigint,
+    exp_mis_pphen double precision,
+    oe_mis_pphen double precision,
+    possible_mis_pphen bigint,
+    obs_syn bigint,
+    exp_syn double precision,
+    oe_syn double precision,
+    mu_syn double precision,
+    possible_syn bigint,
+    obs_lof bigint,
+    mu_lof double precision,
+    possible_lof bigint,
+    exp_lof double precision,
+    pLI double precision,
+    pNull double precision,
+    pRec double precision,
+    oe_lof double precision,
+    oe_syn_lower double precision,
+    oe_syn_upper double precision,
+    oe_mis_lower double precision,
+    oe_mis_upper double precision,
+    oe_lof_lower double precision,
+    oe_lof_upper double precision,
+    constraint_flag character varying(2048),
+    syn_z double precision,
+    mis_z double precision,
+    lof_z   double precision,
+    oe_lof_upper_rank bigint,
+    oe_lof_upper_bin bigint,
+    oe_lof_upper_bin_6 bigint,
+    n_sites bigint,
+    classic_caf double precision,
+    max_af double precision,
+    no_lofs bigint,
+    obs_het_lof bigint,
+    obs_hom_lof bigint,
+    defined bigint,
+    p double precision,
+    exp_hom_lof double precision,
+    classic_caf_afr double precision,
+    classic_caf_amr double precision,
+    classic_caf_asj double precision,
+    classic_caf_eas double precision,
+    classic_caf_fin double precision,
+    classic_caf_nfe double precision,
+    classic_caf_oth double precision,
+    classic_caf_sas double precision,
+    p_afr double precision,
+    p_amr double precision,
+    p_asj double precision,
+    p_eas double precision,
+    p_fin double precision,
+    p_nfe double precision,
+    p_oth double precision,
+    p_sas double precision,
+    transcript_type character varying(255),
+    gene_id character varying(255),
+    transcript_level bigint,
+    cds_length bigint,
+    num_coding_exons bigint,
+    gene_type character varying(255),
+    gene_length bigint,
+    exac_pLI double precision,
+    exac_obs_lof bigint,
+    exac_exp_lof double precision,
+    exac_oe_lof double precision,
+    brain_expression character varying(255),
+    chromosome character varying(255),
+    start_position bigint,
+    end_position bigint
+);
+
+
+ALTER TABLE public.gnomad_plof OWNER TO batch_admin;
+
+--
+-- Name: gnomad_plof_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.gnomad_plof_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.gnomad_plof_id_seq OWNER TO batch_admin;
+
+--
+-- Name: gnomad_plof_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.gnomad_plof_id_seq OWNED BY public.gnomad_plof.id;
+
+
+
+
 
 --
 -- Name: impc_embryo_viability_tmp; Type: TABLE; Schema: public; Owner: batch_admin
@@ -899,77 +1123,6 @@ ALTER SEQUENCE public.impc_significant_phenotype_id_seq OWNED BY public.impc_sig
 
 
 --
--- Name: impc_statistical_result_tmp; Type: TABLE; Schema: public; Owner: batch_admin
---
-
-
-
--- CREATE TABLE public.impc_statistical_result_tmp (
---     id bigint NOT NULL,
---     doc_id character varying(255),
---     db_id bigint,
---     data_type character varying(255),
---     mp_term_id character varying(255),
---     mp_term_name character varying(255),
---     top_level_mp_term_ids text,
---     top_level_mp_term_names text,
---     life_stage_acc character varying(255),
---     life_stage_name character varying(255),
---     project_name character varying(255),
---     phenotyping_center character varying(255),
---     pipeline_stable_id character varying(255),
---     pipeline_stable_key bigint,
---     pipeline_name character varying(255),
---     pipeline_id bigint,
---     procedure_stable_id character varying(255),
---     procedure_stable_key bigint,
---     procedure_name character varying(255),
---     procedure_id bigint,
---     parameter_stable_id character varying(255),
---     parameter_stable_key bigint,
---     parameter_name character varying(255),
---     parameter_id bigint,
---     colony_id character varying(255),
---     impc_marker_symbol character varying(255),
---     impc_marker_accession_id character varying(255),
---     impc_allele_symbol character varying(255),
---     impc_allele_name text,
---     impc_allele_accession_id character varying(255),
---     impc_strain_name character varying(255),
---     impc_strain_accession_id character varying(255),
---     genetic_background character varying(255),
---     zygosity character varying(255),
---     status character varying(255),
---     p_value float8,
---     significant boolean
--- );
--- 
--- 
--- ALTER TABLE public.impc_statistical_result_tmp OWNER TO batch_admin;
-
-
---
--- Name: impc_statistical_result_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
---
-
--- CREATE SEQUENCE public.impc_statistical_result_tmp_id_seq
---     START WITH 1
---     INCREMENT BY 1
---     NO MINVALUE
---     NO MAXVALUE
---     CACHE 1;
-
-
--- ALTER TABLE public.impc_statistical_result_tmp_id_seq OWNER TO batch_admin;
-
---
--- Name: impc_statistical_result_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
---
-
--- ALTER SEQUENCE public.impc_statistical_result_tmp_id_seq OWNED BY public.impc_statistical_result_tmp.id;
-
-
---
 -- Name: impc_statistical_result; Type: TABLE; Schema: public; Owner: batch_admin
 --
 
@@ -1035,6 +1188,10 @@ ALTER TABLE public.impc_statistical_result_id_seq OWNER TO batch_admin;
 --
 
 ALTER SEQUENCE public.impc_statistical_result_id_seq OWNED BY public.impc_statistical_result.id;
+
+
+
+
 
 
 
@@ -1565,6 +1722,20 @@ ALTER TABLE ONLY public.achilles_gene_effect_raw ALTER COLUMN id SET DEFAULT nex
 ALTER TABLE ONLY public.achilles_gene_effect ALTER COLUMN id SET DEFAULT nextval('public.achilles_gene_effect_id_seq'::regclass);
 
 
+--
+-- Name: gnomad_plof_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.gnomad_plof_tmp ALTER COLUMN id SET DEFAULT nextval('public.gnomad_plof_tmp_id_seq'::regclass);
+
+
+--
+-- Name: gnomad_plof id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.gnomad_plof ALTER COLUMN id SET DEFAULT nextval('public.gnomad_plof_id_seq'::regclass);
+
+
 
 
 --
@@ -1611,13 +1782,6 @@ ALTER TABLE ONLY public.impc_significant_phenotype_tmp ALTER COLUMN id SET DEFAU
 ALTER TABLE ONLY public.impc_significant_phenotype ALTER COLUMN id SET DEFAULT nextval('public.impc_significant_phenotype_id_seq'::regclass);
 
 
-
-
---
--- Name: impc_statistical_result_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
---
-
--- ALTER TABLE ONLY public.impc_statistical_result_tmp ALTER COLUMN id SET DEFAULT nextval('public.impc_statistical_result_tmp_id_seq'::regclass);
 
 
 --
@@ -1782,6 +1946,22 @@ ALTER TABLE ONLY public.achilles_gene_effect_raw
 ALTER TABLE ONLY public.achilles_gene_effect
     ADD CONSTRAINT achilles_gene_effect_pkey PRIMARY KEY (id);
 
+
+
+--
+-- Name: gnomad_plof_tmp gnomad_plof_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.gnomad_plof_tmp
+    ADD CONSTRAINT gnomad_plof_tmp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: gnomad_plof gnomad_plof_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.gnomad_plof
+    ADD CONSTRAINT gnomad_plof_pkey PRIMARY KEY (id);
 
 
 
@@ -2040,6 +2220,13 @@ ALTER TABLE ONLY public.achilles_gene_effect_raw
     ADD CONSTRAINT fk969u1heb18j099e8a67r63t8 FOREIGN KEY (cell_type_name_id) REFERENCES public.achillies_cell_types(id);
 
 
+
+--
+-- Name: gnomad_plof fk729a1ton18a028e8a43r23o8; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.gnomad_plof
+    ADD CONSTRAINT fk729a1ton18a028e8a43r23o8 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
 
 
 --
