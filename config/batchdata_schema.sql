@@ -1222,10 +1222,15 @@ CREATE TABLE public.impc_count (
     impc_allele_symbol character varying(255),
     impc_allele_accession_id character varying(255),
     successful_parameter_count bigint DEFAULT 0,
+    successful_parameter_list text,
     total_procedure_count bigint DEFAULT 0,
+    total_procedure_list text,
     homozygous_total_procedure_count bigint DEFAULT 0,
+    homozygous_total_procedure_list text,
     significant_procedure_count bigint DEFAULT 0,
-    homozygous_significant_procedure_count bigint DEFAULT 0
+    significant_procedure_list text,
+    homozygous_significant_procedure_count bigint DEFAULT 0,
+    homozygous_significant_procedure_list text
 );
 
 
