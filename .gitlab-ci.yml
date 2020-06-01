@@ -189,26 +189,6 @@ IMPC_Phenotypes:
 
 
 
-IMPC_Proceedures:
-    image: ubuntu:latest
-    stage: download
-    before_script:
-        - apt-get update && apt-get install -y jq curl && apt-get clean && rm -rf /var/lib/apt/lists/*
-    script:
-        
-        # Establish a data directory
-        - mkdir -p "$MOUNT_POINT"
-        - cd "$MOUNT_POINT"
-        
-        - source "$CI_PROJECT_DIR"/scripts/extract_impc_proceedure_data.sh
-        
-
-    artifacts:
-        paths:
-            - "$MOUNT_POINT/"
-
-
-
 IMPC_Stats:
     image: ubuntu:latest
     stage: download
@@ -274,7 +254,6 @@ Synonym-formatting:
         - Extra_data
         - IMPC_Viability
         - IMPC_Phenotypes
-        - IMPC_Proceedures
         - IMPC_Stats
         - gnomAD_pLoF
     artifacts:

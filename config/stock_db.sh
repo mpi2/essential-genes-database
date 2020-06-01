@@ -223,13 +223,6 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table imp
 
 
 
-# IMPC proceedure data
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_proceedure_count (phenotyping_center, procedure_stable_id, count) FROM '/mnt/impc_proceedures_by_centre.tsv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
-
-
-
-
-
 
 
 # IMPC stats data
@@ -334,6 +327,9 @@ impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 # Take 1:1 orthologs with a support count >= 5 (categories GOOD or MODERATE)
 # Human genes are all HGNC genes except those with the locus_type classified as 'readthrough'
 # Ortholog assignment and data on the number of supporting calls comes from HCOP
+#
+# The mean achilles_gene_effect is calculated from the gene effect scores (Avana scores)
+# for different cell lines found in the DepMap Achilles gene effect file.
 #
 # Include duplicate early adult viability calls where calls agree, along with the unique calls for a gene.
 # IMPC early adult viability data is recorded under the IMPRESS parameter IMPC_VIA_001_001

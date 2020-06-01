@@ -1271,50 +1271,6 @@ ALTER SEQUENCE public.impc_count_id_seq OWNED BY public.impc_count.id;
 
 
 
-
-
-
-
---
--- Name: impc_proceedure_count; Type: TABLE; Schema: public; Owner: batch_admin
---
-
-CREATE TABLE public.impc_proceedure_count (
-    id bigint NOT NULL,
-    phenotyping_center character varying(255),
-    procedure_stable_id character varying(255),
-    count bigint
-);
-
-
-ALTER TABLE public.impc_proceedure_count OWNER TO batch_admin;
-
---
--- Name: impc_proceedure_count_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
---
-
-CREATE SEQUENCE public.impc_proceedure_count_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.impc_proceedure_count_id_seq OWNER TO batch_admin;
-
---
--- Name: impc_proceedure_count_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
---
-
-ALTER SEQUENCE public.impc_proceedure_count_id_seq OWNED BY public.impc_proceedure_count.id;
-
-
-
-
-
-
-
 --
 -- Name: fusil; Type: TABLE; Schema: public; Owner: batch_admin
 --
@@ -1805,13 +1761,6 @@ ALTER TABLE ONLY public.impc_statistical_result ALTER COLUMN id SET DEFAULT next
 ALTER TABLE ONLY public.impc_count ALTER COLUMN id SET DEFAULT nextval('public.impc_count_id_seq'::regclass);
 
 
---
--- Name: impc_proceedure_count id; Type: DEFAULT; Schema: public; Owner: batch_admin
---
-
-ALTER TABLE ONLY public.impc_proceedure_count ALTER COLUMN id SET DEFAULT nextval('public.impc_proceedure_count_id_seq'::regclass);
-
-
 
 --
 -- Name: fusil id; Type: DEFAULT; Schema: public; Owner: batch_admin
@@ -2049,16 +1998,6 @@ ALTER TABLE ONLY public.impc_statistical_result
 ALTER TABLE ONLY public.impc_count
     ADD CONSTRAINT impc_count_pkey PRIMARY KEY (id);
 
-
-
-
-
---
--- Name: impc_proceedure_count impc_proceedure_count_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
---
-
-ALTER TABLE ONLY public.impc_proceedure_count
-    ADD CONSTRAINT impc_proceedure_count_pkey PRIMARY KEY (id);
 
 
 
