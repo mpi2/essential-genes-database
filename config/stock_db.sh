@@ -111,6 +111,10 @@ h.mgi_gene_acc_id = mouse_gene.mgi_gene_acc_id
 GROUP BY list,count,human_gene.id, mouse_gene.id
 order by count desc"
 
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP TABLE hcop"
+
+
 # IDG data 
 # Load the original IDG data into a temporary table.
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp (name, tdl, symbol, uniprot_acc_id, chr) FROM '/mnt/idg_out.txt' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
