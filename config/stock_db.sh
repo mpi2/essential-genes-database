@@ -349,16 +349,16 @@ impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 # Subviable Outlier (SV.outlier): IMPC subviable and mean achilles_gene_effect (Avana score) ≤ -0.45
 # 
 # Viable with Phenotype (VP): IMPC viable and mean achilles_gene_effect (Avana score) > -0.45, and 
-#                             has one allele >= 1 significant phenotype procedure
+#                             has one allele >= 1 significant phenotype parameter
 # 
 # Viable No Phenotype (VN): IMPC viable and mean achilles_gene_effect (Avana score) > -0.45, and 
-#                           has no allele with a significant phenotype procedure, and 
+#                           has no allele with a significant phenotype parameter, and 
 #                           has an allele where > 13 phenotype procedures have been analysed
 #                           for homozygous mutant animals.
 # 
 # Viable Insufficient Phenotype Procedures (V.insuffProcedures): 
 #                           IMPC viable and mean achilles_gene_effect (Avana score) > -0.45, and 
-#                           has no allele with a significant phenotype procedure, and 
+#                           has no allele with a significant phenotype parameter, and 
 #                           has no allele where > 13 phenotype procedures have been analysed
 #                           for homozygous mutant animals.
 # 
