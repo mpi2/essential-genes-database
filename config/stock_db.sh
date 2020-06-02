@@ -410,7 +410,8 @@ mm.id = v.mouse_gene_id and
 v.zygosity='homozygote' and 
 v.category='Homozygous-Lethal' and 
 v.developmental_stage_name='Earlyadult' and
-age.mean_gene_effect <= -0.45"
+age.mean_gene_effect <= -0.45
+group by mm.id, bin, bin_code"
 
 
 # Developmental lethals
@@ -432,7 +433,8 @@ mm.id = v.mouse_gene_id and
 v.zygosity='homozygote' and 
 v.category='Homozygous-Lethal' and 
 v.developmental_stage_name='Earlyadult' and
-age.mean_gene_effect > -0.45"
+age.mean_gene_effect > -0.45
+group by mm.id, bin, bin_code"
 
 
 # Subviable
@@ -454,7 +456,8 @@ mm.id = v.mouse_gene_id and
 v.zygosity='homozygote' and 
 v.category='Homozygous-Subviable' and 
 v.developmental_stage_name='Earlyadult' and
-age.mean_gene_effect > -0.45"
+age.mean_gene_effect > -0.45
+group by mm.id, bin, bin_code"
 
 
 # Subviable Outlier
@@ -476,7 +479,8 @@ mm.id = v.mouse_gene_id and
 v.zygosity='homozygote' and 
 v.category='Homozygous-Subviable' and 
 v.developmental_stage_name='Earlyadult' and
-age.mean_gene_effect <= -0.45"
+age.mean_gene_effect <= -0.45
+group by mm.id, bin, bin_code"
 
 
 
@@ -500,7 +504,8 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0)"
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0)
+group by mm.id, bin, bin_code"
 
 
 # Viable No Phenotype
@@ -524,7 +529,8 @@ v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
 mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0) and
-mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13)"
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13)
+group by mm.id, bin, bin_code"
 
 
 # Viable Insufficient Phenotype Procedures
@@ -549,7 +555,8 @@ v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
 mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0) and
 mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13) and
-mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count < 13)"
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count < 13)
+group by mm.id, bin, bin_code"
 
 
 # Viable Outlier
@@ -571,7 +578,8 @@ mm.id = v.mouse_gene_id and
 v.zygosity='homozygote' and 
 v.category='Homozygous-Viable' and 
 v.developmental_stage_name='Earlyadult' and
-age.mean_gene_effect <= -0.45"
+age.mean_gene_effect <= -0.45
+group by mm.id, bin, bin_code"
 
 
 
