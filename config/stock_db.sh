@@ -392,15 +392,20 @@ impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 
 
 # Cellular lethals
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Cellular Lethal' as "bin", 'CL' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Cellular Lethal' as \"bin\", 'CL' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Lethal' and 
@@ -409,15 +414,20 @@ age.mean_gene_effect <= -0.45"
 
 
 # Developmental lethals
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Developmental Lethal' as "bin", 'DL' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Developmental Lethal' as \"bin\", 'DL' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Lethal' and 
@@ -426,15 +436,20 @@ age.mean_gene_effect > -0.45"
 
 
 # Subviable
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Subviable' as "bin", 'SV' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Subviable' as \"bin\", 'SV' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Subviable' and 
@@ -443,15 +458,20 @@ age.mean_gene_effect > -0.45"
 
 
 # Subviable Outlier
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Subviable Outlier' as "bin", 'SV.outlier' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Subviable Outlier' as \"bin\", 'SV.outlier' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Subviable' and 
@@ -461,15 +481,20 @@ age.mean_gene_effect <= -0.45"
 
 
 # Viable With Phenotype
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Viable With Phenotype' as "bin", 'VP' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Viable With Phenotype' as \"bin\", 'VP' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Viable' and
@@ -479,15 +504,20 @@ mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_succes
 
 
 # Viable No Phenotype
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Viable No Phenotype' as "bin", 'VN' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Viable No Phenotype' as \"bin\", 'VN' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Viable' and
@@ -498,15 +528,20 @@ mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_
 
 
 # Viable Insufficient Phenotype Procedures
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Viable Insufficient Phenotype Procedures' as "bin", 'V.insuffProcedures' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Viable Insufficient Phenotype Procedures' as \"bin\", 'V.insuffProcedures' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Viable' and
@@ -518,15 +553,20 @@ mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_
 
 
 # Viable Outlier
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
-select mm.id, 'Viable Outlier' as "bin", 'V.outlier' as "bin_code" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
+mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
+human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1))
+INSERT INTO fusil (mouse_gene_id, bin, bin_code) 
+select mm.id, 'Viable Outlier' as \"bin\", 'V.outlier' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v 
 where 
 mm.id=oo.mouse_gene_id and 
-mm.mgi_gene_acc_id in (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
 oo.support_count > 4 and 
 oo.human_gene_id = hh.id and 
+hh.hgnc_acc_id in (select hgnc_acc_id from human_genes_with_single_mouse_ortholog) and 
 hh.id=age.human_gene_id and 
-mm.mgi_gene_acc_id in ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.developmental_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.developmental_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)) and 
+mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_distinct_homozgous_viability_call) and 
 mm.id = v.mouse_gene_id and 
 v.zygosity='homozygote' and 
 v.category='Homozygous-Viable' and 
