@@ -1435,18 +1435,6 @@ CREATE TABLE public.mouse_gene (
 ALTER TABLE public.mouse_gene OWNER TO batch_admin;
 
 --
--- Name: mouse_gene_allele; Type: TABLE; Schema: public; Owner: batch_admin
---
-
-CREATE TABLE public.mouse_gene_allele (
-    mouse_gene_id bigint NOT NULL,
-    mouse_allele_id bigint NOT NULL
-);
-
-
-ALTER TABLE public.mouse_gene_allele OWNER TO batch_admin;
-
---
 -- Name: mouse_gene_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
 --
 
