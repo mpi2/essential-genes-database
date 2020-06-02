@@ -270,6 +270,19 @@ WHERE
 impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
+SET homozygous_successful_parameter_count = t2.count,
+    homozygous_successful_parameter_list = t2.homozygous_successful_parameter_list
+FROM impc_count t1
+INNER JOIN (select impc_allele_accession_id, count(distinct(parameter_stable_id)) as count, 
+   array_to_string(array_agg(distinct(parameter_stable_id)),'|') as homozygous_successful_parameter_list
+   from impc_significant_phenotype
+   where zygosity='homozygote'
+  group by impc_allele_accession_id) as t2
+on t2.impc_allele_accession_id = t1.impc_allele_accession_id
+WHERE
+impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
 SET total_procedure_count = t2.count,
     total_procedure_list = t2.total_procedure_list
 FROM impc_count t1
@@ -462,7 +475,7 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id in (select distinct(mouse_gene_id) from impc_count where successful_parameter_count > 0)"
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0)"
 
 
 # Viable No Phenotype
@@ -480,7 +493,7 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id NOT in (select distinct(mouse_gene_id) from impc_count where successful_parameter_count > 0) and
+mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0) and
 mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13)"
 
 
@@ -499,7 +512,7 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id NOT in (select distinct(mouse_gene_id) from impc_count where successful_parameter_count > 0) and
+mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0) and
 mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13) and
 mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count < 13)"
 
