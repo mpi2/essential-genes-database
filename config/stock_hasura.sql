@@ -20,7 +20,7 @@ SET row_security = off;
 -- Name: hdb_catalog; Type: SCHEMA; Schema: -; Owner: hasurauser
 --
 
-CREATE SCHEMA hdb_catalog;
+CREATE SCHEMA IF NOT EXISTS hdb_catalog;
 
 
 ALTER SCHEMA hdb_catalog OWNER TO hasurauser;
@@ -676,21 +676,6 @@ COPY hdb_catalog.hdb_function (function_schema, function_name, is_system_defined
 --
 
 COPY hdb_catalog.hdb_permission (table_schema, table_name, role_name, perm_type, perm_def, comment, is_system_defined) FROM stdin;
-public	achilles_gene_effect	public	select	{"filter": {}, "columns": ["mean_gene_effect", "entrez_acc_id", "human_gene_id", "id", "raw_data_id"], "allow_aggregations": true}	\N	f
-public	clingen	public	select	{"filter": {}, "columns": ["id", "human_gene_id", "haploinsufficiency", "triplosensitivity", "report", "date"], "allow_aggregations": true}	\N	f
-public	fusil	public	select	{"filter": {}, "columns": ["id", "mouse_gene_id", "bin", "bin_code"], "allow_aggregations": true}	\N	f
-public	gnomad_plof	public	select	{"filter": {}, "columns": ["id", "human_gene_id", "gene_symbol", "transcript", "obs_mis", "exp_mis", "oe_mis", "mu_mis", "possible_mis", "obs_mis_pphen", "exp_mis_pphen", "oe_mis_pphen", "possible_mis_pphen", "obs_syn", "exp_syn", "oe_syn", "mu_syn", "possible_syn", "obs_lof", "mu_lof", "possible_lof", "exp_lof", "pli", "pnull", "prec", "oe_lof", "oe_syn_lower", "oe_syn_upper", "oe_mis_lower", "oe_mis_upper", "oe_lof_lower", "oe_lof_upper", "constraint_flag", "syn_z", "mis_z", "lof_z", "oe_lof_upper_rank", "oe_lof_upper_bin", "oe_lof_upper_bin_6", "n_sites", "classic_caf", "max_af", "no_lofs", "obs_het_lof", "obs_hom_lof", "defined", "p", "exp_hom_lof", "classic_caf_afr", "classic_caf_amr", "classic_caf_asj", "classic_caf_eas", "classic_caf_fin", "classic_caf_nfe", "classic_caf_oth", "classic_caf_sas", "p_afr", "p_amr", "p_asj", "p_eas", "p_fin", "p_nfe", "p_oth", "p_sas", "transcript_type", "gene_id", "transcript_level", "cds_length", "num_coding_exons", "gene_type", "gene_length", "exac_pli", "exac_obs_lof", "exac_exp_lof", "exac_oe_lof", "brain_expression", "chromosome", "start_position", "end_position"], "allow_aggregations": true}	\N	f
-public	hgnc_gene	public	select	{"filter": {}, "columns": ["id", "human_gene_id", "agr_acc_id", "alias_name", "alias_symbol", "bioparadigms_slc", "ccds_acc_id", "cd", "cosmic", "date_approved_reserved", "date_modified", "date_name_changed", "date_symbol_changed", "ena", "ensembl_gene_acc_id", "entrez_acc_id", "enzyme_acc_id", "gene_family", "gene_family_acc_id", "gtrnadb", "hgnc_acc_id", "homeodb", "horde_acc_id", "imgt", "intermediate_filament_db", "iuphar", "kznf_gene_catalog", "lncipedia", "lncrnadb", "location", "location_sortable", "locus_group", "locus_type", "lsdb", "mamit_trnadb", "merops", "mgi_gene_acc_id", "mirbase", "name", "omim_acc_id", "orphanet", "prev_name", "prev_symbol", "pseudogene_org", "pubmed_acc_id", "refseq_accession", "rgd_acc_id", "rna_central_acc_ids", "snornabase", "status", "symbol", "ucsc_acc_id", "uniprot_acc_ids", "vega_acc_id"], "allow_aggregations": true}	\N	f
-public	human_gene	public	select	{"filter": {}, "columns": ["id", "hgnc_acc_id", "name", "symbol", "ensembl_gene_acc_id", "entrez_gene_acc_id"], "allow_aggregations": true}	\N	f
-public	human_gene_synonym	public	select	{"filter": {}, "columns": ["id", "hgnc_acc_id", "synonym"], "allow_aggregations": true}	\N	f
-public	human_gene_synonym_relation	public	select	{"filter": {}, "columns": ["human_gene_id", "human_gene_synonym_id"], "allow_aggregations": true}	\N	f
-public	idg	public	select	{"filter": {}, "columns": ["id", "human_gene_id", "name", "tdl", "symbol", "uniprot_acc_id", "chr"], "allow_aggregations": true}	\N	f
-public	impc_adult_viability	public	select	{"filter": {}, "columns": ["id", "mouse_gene_id", "parameter_stable_id", "project_id", "project_name", "procedure_group", "procedure_stable_id", "pipeline_stable_id", "pipeline_name", "phenotyping_center_id", "phenotyping_center", "developmental_stage_acc", "developmental_stage_name", "gene_symbol", "gene_accession_id", "colony_id", "biological_sample_group", "experiment_source_id", "allele_accession_id", "allele_symbol", "allelic_composition", "genetic_background", "strain_accession_id", "strain_name", "zygosity", "sex", "category", "parameter_name", "procedure_name"], "allow_aggregations": true}	\N	f
-public	impc_embryo_viability	public	select	{"filter": {}, "columns": ["id", "mouse_gene_id", "parameter_stable_id", "project_id", "project_name", "procedure_group", "procedure_stable_id", "pipeline_stable_id", "pipeline_name", "phenotyping_center_id", "phenotyping_center", "developmental_stage_acc", "developmental_stage_name", "gene_symbol", "gene_accession_id", "colony_id", "biological_sample_group", "experiment_source_id", "allele_accession_id", "allele_symbol", "allelic_composition", "genetic_background", "strain_accession_id", "strain_name", "zygosity", "sex", "category", "parameter_name", "procedure_name"], "allow_aggregations": true}	\N	f
-public	mouse_gene	public	select	{"filter": {}, "columns": ["id", "ensembl_chromosome", "ensembl_gene_acc_id", "ensembl_start", "ensembl_stop", "ensembl_strand", "entrez_gene_acc_id", "genome_build", "mgi_gene_acc_id", "name", "mgi_cm", "mgi_chromosome", "mgi_start", "mgi_stop", "mgi_strand", "ncbi_chromosome", "ncbi_start", "ncbi_stop", "ncbi_strand", "symbol", "type", "subtype"], "allow_aggregations": true}	\N	f
-public	mouse_gene_synonym	public	select	{"filter": {}, "columns": ["id", "mgi_gene_acc_id", "synonym"], "allow_aggregations": true}	\N	f
-public	mouse_gene_synonym_relation	public	select	{"filter": {}, "columns": ["mouse_gene_id", "mouse_gene_synonym_id"], "allow_aggregations": false}	\N	f
-public	ortholog	public	select	{"filter": {}, "columns": ["support", "support_count", "category", "human_gene_id", "mouse_gene_id"], "allow_aggregations": true}	\N	f
 \.
 
 
@@ -1220,3 +1205,17 @@ ALTER TABLE ONLY hdb_catalog.hdb_relationship
 -- PostgreSQL database dump complete
 --
 
+-- 
+-- Chnage the access to hdb_catalog tables
+-- 
+
+REVOKE ALL ON hdb_catalog.hdb_table FROM hasurauser;
+GRANT SELECT ON hdb_catalog.hdb_table TO hasurauser;
+
+
+REVOKE ALL ON hdb_catalog.hdb_relationship FROM hasurauser;
+GRANT SELECT ON hdb_catalog.hdb_relationship TO hasurauser;
+
+
+REVOKE ALL ON hdb_catalog.hdb_permission FROM hasurauser;
+GRANT SELECT ON hdb_catalog.hdb_permission TO hasurauser;
