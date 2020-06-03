@@ -1206,7 +1206,7 @@ ALTER TABLE ONLY hdb_catalog.hdb_relationship
 --
 
 -- 
--- Chnage the access to hdb_catalog tables
+-- Change the access to hdb_catalog tables
 -- 
 
 REVOKE ALL ON hdb_catalog.hdb_table FROM hasurauser;
