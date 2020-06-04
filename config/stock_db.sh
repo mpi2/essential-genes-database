@@ -258,85 +258,54 @@ select mm.id, vv.gene_symbol, vv.gene_accession_id, vv.allele_symbol, vv.allele_
 
 # Enter the procedure count data
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
-SET successful_parameter_count = t2.count,
-    successful_parameter_list = t2.successful_parameter_list
-FROM impc_count t1
-INNER JOIN (select impc_allele_accession_id, count(distinct(parameter_stable_id)) as count, 
-   array_to_string(array_agg(distinct(parameter_stable_id)),'|') as successful_parameter_list
-   from impc_significant_phenotype
-  group by impc_allele_accession_id) as t2
-on t2.impc_allele_accession_id = t1.impc_allele_accession_id
-WHERE
-impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
-
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
-SET homozygous_successful_parameter_count = t2.count,
-    homozygous_successful_parameter_list = t2.homozygous_successful_parameter_list
-FROM impc_count t1
-INNER JOIN (select impc_allele_accession_id, count(distinct(parameter_stable_id)) as count, 
-   array_to_string(array_agg(distinct(parameter_stable_id)),'|') as homozygous_successful_parameter_list
-   from impc_significant_phenotype
-   where zygosity='homozygote'
-  group by impc_allele_accession_id) as t2
-on t2.impc_allele_accession_id = t1.impc_allele_accession_id
-WHERE
-impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
-
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
-SET total_procedure_count = t2.count,
-    total_procedure_list = t2.total_procedure_list
-FROM impc_count t1
-INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
-   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as total_procedure_list
-   from impc_statistical_result
-  group by impc_allele_accession_id) as t2
-on t2.impc_allele_accession_id = t1.impc_allele_accession_id
-WHERE
-impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
-
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
-SET homozygous_total_procedure_count = t2.count,
-    homozygous_total_procedure_list = t2.homozygous_total_procedure_list
-FROM impc_count t1
-INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
-   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as homozygous_total_procedure_list
-   from impc_statistical_result
-   where zygosity='homozygote'
-  group by impc_allele_accession_id) as t2
-on t2.impc_allele_accession_id = t1.impc_allele_accession_id
-WHERE
-impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
-
-
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
 SET significant_procedure_count = t2.count,
     significant_procedure_list = t2.significant_procedure_list
 FROM impc_count t1
 INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
    array_to_string(array_agg(distinct(procedure_stable_id)),'|') as significant_procedure_list
-   from impc_statistical_result
-   where significant=true
+   from impc_significant_phenotype
   group by impc_allele_accession_id) as t2
 on t2.impc_allele_accession_id = t1.impc_allele_accession_id
 WHERE
 impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
-
-
 
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
 SET homozygous_significant_procedure_count = t2.count,
     homozygous_significant_procedure_list = t2.homozygous_significant_procedure_list
 FROM impc_count t1
 INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
-   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as homozygous_significant_procedure_list
-   from impc_statistical_result
+   array_to_string(array_agg(distinct(parameter_stable_id)),'|') as homozygous_significant_procedure_list
+   from impc_significant_phenotype
    where zygosity='homozygote'
-   and significant=true
   group by impc_allele_accession_id) as t2
 on t2.impc_allele_accession_id = t1.impc_allele_accession_id
 WHERE
 impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
+SET total_successful_procedure_count = t2.count,
+    total_successful_procedure_list = t2.total_successful_procedure_list
+FROM impc_count t1
+INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
+   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as total_successful_procedure_list
+   from impc_statistical_result
+  group by impc_allele_accession_id) as t2
+on t2.impc_allele_accession_id = t1.impc_allele_accession_id
+WHERE
+impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
+
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
+SET homozygous_total_successful_procedure_count = t2.count,
+    homozygous_total_successful_procedure_list = t2.homozygous_total_successful_procedure_list
+FROM impc_count t1
+INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
+   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as homozygous_total_successful_procedure_list
+   from impc_statistical_result
+   where zygosity='homozygote'
+  group by impc_allele_accession_id) as t2
+on t2.impc_allele_accession_id = t1.impc_allele_accession_id
+WHERE
+impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 
 
 # Calculation of the FUSIL bin scores for genes
@@ -362,16 +331,16 @@ impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 # Subviable Outlier (SV.outlier): IMPC subviable and mean achilles_gene_effect (Avana score) ≤ -0.45
 # 
 # Viable with Phenotype (VP): IMPC viable and mean achilles_gene_effect (Avana score) > -0.45, and 
-#                             has one allele >= 1 significant phenotype parameter
+#                             has one allele >= 1 significant phenotype procedure for homozygous mutant animals.
 # 
 # Viable No Phenotype (VN): IMPC viable and mean achilles_gene_effect (Avana score) > -0.45, and 
-#                           has no allele with a significant phenotype parameter, and 
+#                           has no allele with a significant phenotype procedure, and 
 #                           has an allele where > 13 phenotype procedures have been analysed
 #                           for homozygous mutant animals.
 # 
 # Viable Insufficient Phenotype Procedures (V.insuffProcedures): 
 #                           IMPC viable and mean achilles_gene_effect (Avana score) > -0.45, and 
-#                           has no allele with a significant phenotype parameter, and 
+#                           has no allele with a significant phenotype procedure, and 
 #                           has no allele where > 13 phenotype procedures have been analysed
 #                           for homozygous mutant animals.
 # 
@@ -504,7 +473,7 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0)
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_significant_procedure_count > 0)
 group by mm.id, bin, bin_code"
 
 
@@ -528,8 +497,8 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0) and
-mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13)
+mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_significant_procedure_count > 0) and
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_successful_procedure_count >= 13)
 group by mm.id, bin, bin_code"
 
 
@@ -553,9 +522,9 @@ v.zygosity='homozygote' and
 v.category='Homozygous-Viable' and
 v.developmental_stage_name='Earlyadult' and
 age.mean_gene_effect > -0.45 and 
-mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_successful_parameter_count > 0) and
-mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count >= 13) and
-mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_procedure_count < 13)
+mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_significant_procedure_count > 0) and
+mm.id NOT in (select distinct(mouse_gene_id) from impc_count where homozygous_total_successful_procedure_count >= 13) and
+mm.id in (select distinct(mouse_gene_id) from impc_count where homozygous_total_successful_procedure_count < 13)
 group by mm.id, bin, bin_code"
 
 
