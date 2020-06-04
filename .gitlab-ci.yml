@@ -54,6 +54,7 @@ stages:
    - mgi-formatting
    - build
    - dev-deploy
+   - production-deploy
 
 
 #
