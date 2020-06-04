@@ -274,7 +274,7 @@ SET homozygous_significant_procedure_count = t2.count,
     homozygous_significant_procedure_list = t2.homozygous_significant_procedure_list
 FROM impc_count t1
 INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
-   array_to_string(array_agg(distinct(parameter_stable_id)),'|') as homozygous_significant_procedure_list
+   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as homozygous_significant_procedure_list
    from impc_significant_phenotype
    where zygosity='homozygote'
   group by impc_allele_accession_id) as t2
