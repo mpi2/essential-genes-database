@@ -240,7 +240,6 @@ gnomAD_pLoF:
 
 
 orthology_db_dump:
-    image: ubuntu:latest
     stage: download
     script:
         
