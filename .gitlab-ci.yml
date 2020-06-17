@@ -241,6 +241,8 @@ gnomAD_pLoF:
 
 orthology_db_dump:
     stage: download
+    before_script:
+        - apk add --update --no-cache postgresql-client
     script:
         
         # Establish a data directory
@@ -248,33 +250,29 @@ orthology_db_dump:
         - cd "$MOUNT_POINT"
         
         - docker pull rwilsonebi/orthology-db:latest
-        - docker run --name orthologycontainer -v "$MOUNT_POINT:/mnt" -d rwilsonebi/orthology-db:latest
-        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt && psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"\\copy (SELECT support, support_raw, support_count, category, human_gene_id, mouse_gene_id, is_max_human_to_mouse, is_max_mouse_to_human FROM ortholog ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_ortholog.tsv"
-        - log=$(docker logs orthologycontainer)
-        - echo $log
-        - sleep 2
-        - log2=$(docker logs orthologycontainer)
-        - echo $log2
+        - docker run --name orthologycontainer --network="host" -p 5432:5432 -d rwilsonebi/orthology-db:latest
         
-        # Note: 
-        # To dump the data psql could be used with the copy command
-        # to define the fields exported rather than pg_dump with the -a option
-        # e.g. docker exec orthologycontainer sh -c "psql -U orthology_admin -d orthologydata -c \"\\copy (SELECT hgnc_acc_id, synonym FROM human_gene_synonym ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_human_gene_synonym.tsv"        
-        
-        - docker exec orthologycontainer sh -c "env"
-        - docker exec orthologycontainer sh -c "psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"\\copy (SELECT support, support_raw, support_count, category, human_gene_id, mouse_gene_id, is_max_human_to_mouse, is_max_mouse_to_human FROM ortholog ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_ortholog.tsv"
-        
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t ortholog orthologydata > /mnt/orthologydb_ortholog.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t hgnc orthologydata > /mnt/orthologydb_hgnc.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_gene orthologydata > /mnt/orthologydb_mouse_gene.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_gene_synonym orthologydata > /mnt/orthologydb_mouse_gene_synonym.sql psql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_gene_synonym_relation orthologydata > /mnt/orthologydb_mouse_gene_synonym_relation.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_mapping_filter orthologydata > /mnt/orthologydb_mouse_mapping_filter.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene orthologydata > /mnt/orthologydb_human_gene.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_mapping_filter orthologydata > /mnt/orthologydb_human_mapping_filter.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene_synonym orthologydata > /mnt/orthologydb_human_gene_synonym.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene_synonym_relation orthologydata > /mnt/orthologydb_human_gene_synonym_relation.sql"
-
+#        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
+#        
+#        # Note: 
+#        # To dump the data psql could be used with the copy command
+#        # to define the fields exported rather than pg_dump with the -a option
+#        # e.g. docker exec orthologycontainer sh -c "psql -U orthology_admin -d orthologydata -c \"\\copy (SELECT hgnc_acc_id, synonym FROM human_gene_synonym ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_human_gene_synonym.tsv"        
+#        
+#        - docker exec orthologycontainer sh -c "env"
+#        - docker exec orthologycontainer sh -c "psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"\\copy (SELECT support, support_raw, support_count, category, human_gene_id, mouse_gene_id, is_max_human_to_mouse, is_max_mouse_to_human FROM ortholog ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_ortholog.tsv"
+#        
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t ortholog orthologydata > /mnt/orthologydb_ortholog.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t hgnc orthologydata > /mnt/orthologydb_hgnc.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_gene orthologydata > /mnt/orthologydb_mouse_gene.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_gene_synonym orthologydata > /mnt/orthologydb_mouse_gene_synonym.sql psql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_gene_synonym_relation orthologydata > /mnt/orthologydb_mouse_gene_synonym_relation.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t mouse_mapping_filter orthologydata > /mnt/orthologydb_mouse_mapping_filter.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene orthologydata > /mnt/orthologydb_human_gene.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_mapping_filter orthologydata > /mnt/orthologydb_human_mapping_filter.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene_synonym orthologydata > /mnt/orthologydb_human_gene_synonym.sql"
+#        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene_synonym_relation orthologydata > /mnt/orthologydb_human_gene_synonym_relation.sql"
+        - pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t ortholog orthologydata > "$MOUNT_POINT"/orthologydb_ortholog.sql
         - docker stop orthologycontainer
         - docker rm orthologycontainer
         
