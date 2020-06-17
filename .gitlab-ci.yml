@@ -249,7 +249,7 @@ orthology_db_dump:
         
         - docker pull rwilsonebi/orthology-db:latest
         - docker run --name orthologycontainer -v "$MOUNT_POINT:/mnt" -d rwilsonebi/orthology-db:latest
-        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
+        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt && psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"\\copy (SELECT support, support_raw, support_count, category, human_gene_id, mouse_gene_id, is_max_human_to_mouse, is_max_mouse_to_human FROM ortholog ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_ortholog.tsv"
         - log=$(docker logs orthologycontainer)
         - echo $log
         - sleep 2
