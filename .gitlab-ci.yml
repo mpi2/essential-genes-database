@@ -250,7 +250,7 @@ orthology_db_dump:
         - cd "$MOUNT_POINT"
         
         - docker pull rwilsonebi/orthology-db:latest
-        - docker run --name orthologycontainer -v /tmp/.s.PGSQL.5432:/var/run/postgresql/.s.PGSQL.5432 -d rwilsonebi/orthology-db:latest
+        - docker run --name orthologycontainer -v /tmp/.s.PGSQL.5432:/tmp/.s.PGSQL.5432 -d rwilsonebi/orthology-db:latest
         
 #        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
 #        
