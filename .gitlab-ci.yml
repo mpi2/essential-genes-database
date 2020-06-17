@@ -251,7 +251,7 @@ orthology_db_dump:
         
         - docker pull rwilsonebi/orthology-db:latest
 #        - docker run --name orthologycontainer -v /var/run/postgresql/.s.PGSQL.5432:/tmp/.s.PGSQL.5432 -d rwilsonebi/orthology-db:latest
-        - docker run --name orthologycontainer --network=host -d rwilsonebi/orthology-db:latest
+        - docker run --name orthologycontainer -p 5432:5432 -d rwilsonebi/orthology-db:latest
         - sleep 2
         - ss -ptl
         - ss -ta
