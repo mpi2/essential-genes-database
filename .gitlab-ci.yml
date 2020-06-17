@@ -254,18 +254,18 @@ orthology_db_dump:
         # Note: 
         # To dump the data psql could be used with the copy command
         # to define the fields exported rather than pg_dump with the -a option
-        # e.g. docker exec orthologycontainer sh -c "psql -U $ORTHOLOGY_POSTGRES_USER -d $ORTHOLOGY_POSTGRES_DB -c \"\\copy (SELECT hgnc_acc_id, synonym FROM human_gene_synonym ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_human_gene_synonym.tsv"        
+        # e.g. docker exec orthologycontainer sh -c "psql -U orthology_admin -d orthologydata -c \"\\copy (SELECT hgnc_acc_id, synonym FROM human_gene_synonym ORDER BY id) TO STDOUT WITH ENCODING 'UTF8'\" > /mnt/orthologydb_human_gene_synonym.tsv"        
         
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t ortholog $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_ortholog.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t hgnc $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_hgnc.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t mouse_gene $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_mouse_gene.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t mouse_gene_synonym $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_mouse_gene_synonym.sql psql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t mouse_gene_synonym_relation $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_mouse_gene_synonym_relation.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t mouse_mapping_filter $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_mouse_mapping_filter.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t human_gene $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_human_gene.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t human_mapping_filter $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_human_mapping_filter.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t human_gene_synonym $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_human_gene_synonym.sql"
-        - docker exec orthologycontainer sh -c "pg_dump -U $ORTHOLOGY_POSTGRES_USER -E 'UTF8' -a -t human_gene_synonym_relation $ORTHOLOGY_POSTGRES_DB > /mnt/orthologydb_human_gene_synonym_relation.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t ortholog orthologydata > /mnt/orthologydb_ortholog.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t hgnc orthologydata > /mnt/orthologydb_hgnc.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t mouse_gene orthologydata > /mnt/orthologydb_mouse_gene.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t mouse_gene_synonym orthologydata > /mnt/orthologydb_mouse_gene_synonym.sql psql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t mouse_gene_synonym_relation orthologydata > /mnt/orthologydb_mouse_gene_synonym_relation.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t mouse_mapping_filter orthologydata > /mnt/orthologydb_mouse_mapping_filter.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t human_gene orthologydata > /mnt/orthologydb_human_gene.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t human_mapping_filter orthologydata > /mnt/orthologydb_human_mapping_filter.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t human_gene_synonym orthologydata > /mnt/orthologydb_human_gene_synonym.sql"
+        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -E 'UTF8' -a -t human_gene_synonym_relation orthologydata > /mnt/orthologydb_human_gene_synonym_relation.sql"
 
         - docker stop orthologycontainer
         - docker rm orthologycontainer
