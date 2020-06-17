@@ -257,6 +257,9 @@ orthology_db_dump:
         - docker ps -a
         - ss -ptl
         - ss -ta
+        - ss -s
+        - hostname -I
+        - HOST=$(hostname -I)
         
 #        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
 #        
@@ -278,7 +281,7 @@ orthology_db_dump:
 #        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_mapping_filter orthologydata > /mnt/orthologydb_human_mapping_filter.sql"
 #        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene_synonym orthologydata > /mnt/orthologydb_human_gene_synonym.sql"
 #        - docker exec orthologycontainer sh -c "pg_dump -U orthology_admin -h 127.0.0.1 -E 'UTF8' -a -t human_gene_synonym_relation orthologydata > /mnt/orthologydb_human_gene_synonym_relation.sql"
-        - pg_dump -U orthology_admin -E 'UTF8' -a -t ortholog orthologydata > "$MOUNT_POINT"/orthologydb_ortholog.sql
+        - pg_dump -U orthology_admin -h $HOST -E 'UTF8' -a -t ortholog orthologydata > "$MOUNT_POINT"/orthologydb_ortholog.sql
         - docker stop orthologycontainer
         - docker rm orthologycontainer
         
