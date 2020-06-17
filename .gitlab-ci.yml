@@ -258,8 +258,8 @@ orthology_db_dump:
         - ss -ptl
         - ss -ta
         - ss -s
-        - hostname -I
-        - HOST=$(hostname -I)
+        - hostname -i
+        - HOST=$(hostname -i)
         
 #        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
 #        
