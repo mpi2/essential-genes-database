@@ -248,11 +248,14 @@ orthology_db_dump:
         # Establish a data directory
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
+        - mkdir -p /usr/local/tmp
         
         - docker pull rwilsonebi/orthology-db:latest
 #        - docker run --name orthologycontainer -v /var/run/postgresql/.s.PGSQL.5432:/tmp/.s.PGSQL.5432 -d rwilsonebi/orthology-db:latest
-        - docker run --name orthologycontainer -p 5432:5432 -d rwilsonebi/orthology-db:latest
+        - docker run --name orthologycontainer -v /usr/local/tmp:/mnt -p 5432:5432 -d rwilsonebi/orthology-db:latest
+        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
         - docker ps
+        - docker logs orthologycontainer
         - sleep 2
         - docker ps -a
         - ss -ptl
@@ -260,6 +263,7 @@ orthology_db_dump:
         - ss -s
         - hostname -i
         - HOST=$(hostname -i)
+        - docker logs orthologycontainer
         
 #        - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
 #        
