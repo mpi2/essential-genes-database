@@ -248,11 +248,13 @@ orthology_db_dump:
         - cd "$MOUNT_POINT"
         
         - docker pull rwilsonebi/orthology-db:latest
-        - docker run --name orthologycontainer -v "$MOUNT_POINT:/mnt" -v /var/run/postgresql/.s.PGSQL.5432:/var/run/postgresql/.s.PGSQL.5432 -d rwilsonebi/orthology-db:latest
+        - docker run --name orthologycontainer -v "$MOUNT_POINT:/mnt" -d rwilsonebi/orthology-db:latest
         - docker exec orthologycontainer sh -c "chown -R 999:999 /mnt"
-        - docker logs orthologycontainer
+        - log=$(docker logs orthologycontainer)
+        - echo $log
         - sleep 2
-        - docker logs orthologycontainer
+        - log2=$(docker logs orthologycontainer)
+        - echo $log2
         
         # Note: 
         # To dump the data psql could be used with the copy command
