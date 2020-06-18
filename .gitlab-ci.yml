@@ -249,7 +249,7 @@ orthology_db_dump:
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
         
-        - source "$CI_PROJECT_DIR"/scripts/extract_impc_stats_data.sh
+        - source "$CI_PROJECT_DIR"/scripts/orthologydb_dump.sh
         
         
     artifacts:
