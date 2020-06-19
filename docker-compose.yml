@@ -10,7 +10,7 @@ services:
       batchdata:
 
   hasura:
-    image: hasura/graphql-engine:v1.0.0-beta.2
+    image: hasura/graphql-engine:v1.2.2
     restart: always
     environment:
         - HASURA_GRAPHQL_DATABASE_URL=postgres://hasurauser:hasurauser@batch-database:5432/batchdata
