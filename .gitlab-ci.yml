@@ -76,7 +76,7 @@ Human_data:
         # Fetch data files for the service
         
         # IDG        
-        - cp "$CI_PROJECT_DIR"/data/idg_out.txt "$MOUNT_POINT"/idg_out.txt
+        # - cp "$CI_PROJECT_DIR"/data/idg_out.txt "$MOUNT_POINT"/idg_out.txt
         
         # ClinGen
         - curl -sSLN -O https://search.clinicalgenome.org/kb/gene-dosage.csv
@@ -91,6 +91,25 @@ Human_data:
         # In the main body sed replaces parenthesis and spaces around the entrez acc id with delimiters, and removes any trailing tab and space characters.
         # In the header row that describes the cell lines the column heading DepMap_ID is removed with sed so the names can be loaded into a table.
         - cat achilles_gene_effect.col.tsv | sed -e 's/ (/|/g' | sed -e 's/[)]./|/g' | sed -e 's/[[:space:]]\{1,\}$//g' | sed -e 's/DepMap_ID.//g' > achilles_gene_effect.col.formatted.tsv
+        
+
+    artifacts:
+        paths:
+            - "$MOUNT_POINT/"
+
+
+
+IDG:
+    stage: download
+    image: mysql:latest
+    script:
+        
+        # Establish a data directory
+        - mkdir -p "$MOUNT_POINT"
+        - cd "$MOUNT_POINT"
+        
+        # IDG        
+        - mysql -h tcrd.kmc.io -u tcrd tcrd540 -e 'select t.name, t.tdl, p.sym, p.uniprot, p.chr from target t, t2tc, protein p where t.id = t2tc.target_id and t2tc.protein_id = p.id' > idg_out.txt
         
 
     artifacts:
@@ -252,6 +271,7 @@ build_image:
 
     dependencies:
         - Human_data
+        - IDG
         - IMPC_Viability
         - IMPC_Phenotypes
         - IMPC_Stats
