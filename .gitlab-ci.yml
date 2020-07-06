@@ -343,6 +343,11 @@ essential_genes_db_dump:
         - apk add --update --no-cache curl git
     script:
         
+        - git config --global user.email "${CI_EMAIL}"
+        - git config --global user.name "${CI_USERNAME}"
+        - echo "${CI_EMAIL}"
+        - echo "${CI_USERNAME}"
+        
         # Establish a data directory
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
