@@ -53,6 +53,7 @@ stages:
    - build
    - dev-deploy
    - dev-test
+   - dev-dump
    - production-deploy
    - production-test
 
@@ -334,6 +335,32 @@ dev-test:
     artifacts:
         paths:
             - "$MOUNT_POINT/"
+
+
+essential_genes_db_dump:
+    stage: dev-dump
+    before_script:
+        - apk add --update --no-cache curl git
+    script:
+        
+        # Establish a data directory
+        - mkdir -p "$MOUNT_POINT"
+        - cd "$MOUNT_POINT"
+        
+        - - NOW=$(date '+%Y-%m-%d-%H-%M-%S')
+        
+        - git clone https://rwilson:"${DATA_REPO_TOKEN}"@gitlab.ebi.ac.uk/mouse-informatics/essential-gene-data.git
+        - cd essential-gene-data
+        - source "$CI_PROJECT_DIR"/scripts/essential-genes-db_dump.sh
+        - git add -A
+        - git commit -m "Updated the project data at $NOW"
+        - git push origin master
+        
+        
+    artifacts:
+        paths:
+            - "$MOUNT_POINT/"
+
 
 
 
