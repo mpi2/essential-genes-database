@@ -343,8 +343,8 @@ essential_genes_db_dump:
         - apk add --update --no-cache curl git
     script:
         
-        - git config --global user.email "${CI_EMAIL}"
-        - git config --global user.name "${CI_USERNAME}"
+        - git config --global user.email "${GIT_EMAIL}"
+        - git config --global user.name "${GIT_USERNAME}"
         - echo "${CI_EMAIL}"
         - echo "${CI_USERNAME}"
         
@@ -354,7 +354,7 @@ essential_genes_db_dump:
         
         - NOW=$(date '+%Y-%m-%d-%H-%M-%S')
         
-        - git clone https://rwilson:"${DATA_REPO_TOKEN}"@gitlab.ebi.ac.uk/mouse-informatics/essential-gene-data.git
+        - git clone https://"${DATA_REPO_USER}":"${DATA_REPO_TOKEN}"@"${DATA_REPO}".git
         - cd essential-gene-data
         - source "$CI_PROJECT_DIR"/scripts/essential-genes-db_dump.sh
         - git add -A
