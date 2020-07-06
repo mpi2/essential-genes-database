@@ -347,7 +347,7 @@ essential_genes_db_dump:
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
         
-        - - NOW=$(date '+%Y-%m-%d-%H-%M-%S')
+        - NOW=$(date '+%Y-%m-%d-%H-%M-%S')
         
         - git clone https://rwilson:"${DATA_REPO_TOKEN}"@gitlab.ebi.ac.uk/mouse-informatics/essential-gene-data.git
         - cd essential-gene-data
