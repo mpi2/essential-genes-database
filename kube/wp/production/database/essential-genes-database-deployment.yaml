@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: essential-genes-database
+  name: essential-genes-database
+  namespace: mi-essential-genes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: essential-genes-database
+  minReadySeconds: 5
+  strategy:
+    # indicate which strategy we want for rolling update
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: essential-genes-database
+    spec:
+      containers:
+      - image: rwilsonebi/batch-download-db:latest
+        imagePullPolicy: Always
+        name: essential-genes-database-container
+        env:
+        - name: REDEPLOY_KEY
+          value: "STRING_REPLACED_DURING_REDEPLOY"
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+        ports:
+        - containerPort: 5432
+          name: http
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 120
+          periodSeconds: 60
+        resources: {}

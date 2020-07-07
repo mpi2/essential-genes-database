@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mi-essential-genes-deployment
+  namespace: mi-essential-genes
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: mi-essential-genes-deployment-access
+  namespace: mi-essential-genes
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups:
+  - "apps"
+  resources:
+  - deployments
+  - replicasets
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups:
+  - "extensions"
+  resources:
+  - deployments
+  - replicasets
+  - ingresses
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: mi-essential-genes-deployment-access-binding
+  namespace: mi-essential-genes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: mi-essential-genes-deployment-access
+subjects:
+- kind: ServiceAccount
+  name: mi-essential-genes-deployment
+  namespace: mi-essential-genes
