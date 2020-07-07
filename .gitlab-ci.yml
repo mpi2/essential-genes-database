@@ -351,9 +351,15 @@ essential_genes_db_dump:
         - git clone https://"${DATA_REPO_USER}":"${DATA_REPO_TOKEN}"@"${DATA_REPO}".git
         - cd essential-gene-data
         - source "$CI_PROJECT_DIR"/scripts/essential-genes-db_dump.sh
-        - git add -A
-        - git commit -m "Updated the project data at $NOW"
-        - git push origin master
+        - |
+          if [ $(git status --porcelain=v1 2>/dev/null | wc -l) == "0" ] ; then
+            # No new files to push to the data repository
+            :
+          else
+            git add -A
+            git commit -m "Updated the project data at $NOW"
+            git push origin master
+          fi
         - cd ../
         - rm -r essential-gene-data
 
