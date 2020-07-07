@@ -328,6 +328,8 @@ hh-dev-deploy:
     refs:
       - master
   script:
+    - source ${MOUNT_POINT}/datetime.env
+    - echo ${NOW}
     #
     - kubectl config set-cluster local --server="${HH_KUBERNETES_ENDPOINT}"
     - kubectl config set clusters.local.certificate-authority-data "${HH_KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
@@ -336,7 +338,7 @@ hh-dev-deploy:
     - kubectl config use-context "${HH_KUBERNETES_DEV_NAMESPACE}"
     - kubectl version
     #
-    - sed -i "s/latest/${CI_COMMIT_SHA:0:12}/g" kube/wp/dev/database/essential-genes-database-deployment.yaml
+    - sed -i "s/latest/${NOW}/g" kube/wp/dev/database/essential-genes-database-deployment.yaml
     - sed -i "s/STRING_REPLACED_DURING_REDEPLOY/$(date)/g" kube/wp/dev/database/essential-genes-database-deployment.yaml
     
     - |
@@ -362,6 +364,8 @@ hx-dev-deploy:
     refs:
       - master
   script:
+    - source ${MOUNT_POINT}/datetime.env
+    - echo ${NOW}
     #
     - kubectl config set-cluster local --server="${HX_KUBERNETES_ENDPOINT}"
     - kubectl config set clusters.local.certificate-authority-data "${HX_KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
@@ -370,7 +374,7 @@ hx-dev-deploy:
     - kubectl config use-context "${HX_KUBERNETES_DEV_NAMESPACE}"
     - kubectl version
     #
-    - sed -i "s/latest/${CI_COMMIT_SHA:0:12}/g" kube/wp/dev/database/essential-genes-database-deployment.yaml
+    - sed -i "s/latest/${NOW}/g" kube/wp/dev/database/essential-genes-database-deployment.yaml
     - sed -i "s/STRING_REPLACED_DURING_REDEPLOY/$(date)/g" kube/wp/dev/database/essential-genes-database-deployment.yaml
     
     - |
@@ -448,6 +452,8 @@ hh-production-deploy:
     refs:
       - master
   script:
+    - source ${MOUNT_POINT}/datetime.env
+    - echo ${NOW}
     #
     - kubectl config set-cluster local --server="${HH_KUBERNETES_ENDPOINT}"
     - kubectl config set clusters.local.certificate-authority-data "${HH_KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
@@ -456,7 +462,7 @@ hh-production-deploy:
     - kubectl config use-context "${HH_KUBERNETES_NAMESPACE}"
     - kubectl version
     #
-    - sed -i "s/latest/${CI_COMMIT_SHA:0:12}/g" kube/wp/production/database/essential-genes-database-deployment.yaml
+    - sed -i "s/latest/${NOW}/g" kube/wp/production/database/essential-genes-database-deployment.yaml
     - sed -i "s/STRING_REPLACED_DURING_REDEPLOY/$(date)/g" kube/wp/production/database/essential-genes-database-deployment.yaml
     
     - |
@@ -482,6 +488,8 @@ hx-production-deploy:
     refs:
       - master
   script:
+    - source ${MOUNT_POINT}/datetime.env
+    - echo ${NOW}
     #
     - kubectl config set-cluster local --server="${HX_KUBERNETES_ENDPOINT}"
     - kubectl config set clusters.local.certificate-authority-data "${HX_KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
@@ -490,7 +498,7 @@ hx-production-deploy:
     - kubectl config use-context "${HX_KUBERNETES_NAMESPACE}"
     - kubectl version
     #
-    - sed -i "s/latest/${CI_COMMIT_SHA:0:12}/g" kube/wp/production/database/essential-genes-database-deployment.yaml
+    - sed -i "s/latest/${NOW}/g" kube/wp/production/database/essential-genes-database-deployment.yaml
     - sed -i "s/STRING_REPLACED_DURING_REDEPLOY/$(date)/g" kube/wp/production/database/essential-genes-database-deployment.yaml
     
     - |
