@@ -2,6 +2,7 @@
 set -e
 
 ENDPOINT="https://www.gentar.org/orthology-dev/v1alpha1/pg_dump"
+EBI_PROXY="https://hx-wwwcache.ebi.ac.uk:3128"
 
 error_exit()
 {
@@ -57,7 +58,7 @@ fetch_data()
     request_payload="$1"
     output_file="$2"
 
-    curl "$ENDPOINT" -X POST --data "$request_payload" \
+    curl "$ENDPOINT" -X POST -x "$EBI_PROXY" --data "$request_payload" \
           -H "Content-Type: application/json" \
           -H "X-Hasura-Role: admin" > "$output_file"
 }
