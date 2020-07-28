@@ -80,6 +80,7 @@ dump_table_data()
 		set_table_data_payload "$table"
 		fetch_data "$PAYLOAD" "$OUTPUT"
 		printf '\n'
+		sleep 30
 	done;
 }
 
