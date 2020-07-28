@@ -206,6 +206,7 @@ gnomAD_pLoF:
 
 
 orthology_db_dump:
+    image: postgres:11-alpine
     stage: download
     before_script:
         - apk add --update --no-cache curl
