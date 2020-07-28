@@ -2,7 +2,7 @@
 set -e
 
 ENDPOINT="https://www.gentar.org/orthology-dev/v1alpha1/pg_dump"
-EBI_PROXY="https://hx-wwwcache.ebi.ac.uk:3128"
+EBI_PROXY="http://hx-wwwcache.ebi.ac.uk:3128"
 
 error_exit()
 {
