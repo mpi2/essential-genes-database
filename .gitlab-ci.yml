@@ -55,7 +55,6 @@ stages:
    - dev-test
    - production-deploy
    - production-test
-   - dev-dump
 
 
 #
@@ -532,33 +531,6 @@ production-test:
     artifacts:
         paths:
             - "$MOUNT_POINT/"
-
-
-essential_genes_db_dump:
-    stage: dev-dump
-    before_script:
-        - apk add --update --no-cache curl git
-    script:
-        
-        - git config --global user.email "${GIT_EMAIL}"
-        - git config --global user.name "${GIT_USERNAME}"
-        
-        - NOW=$(date '+%Y-%m-%d-%H-%M-%S')
-        
-        - git clone https://"${DATA_REPO_USER}":"${DATA_REPO_TOKEN}"@"${DATA_REPO}".git
-        - cd essential-gene-data
-        - source "$CI_PROJECT_DIR"/scripts/essential-genes-db_dump.sh
-        - |
-          if [ $(git status --porcelain=v1 2>/dev/null | wc -l) == "0" ] ; then
-            # No new files to push to the data repository
-            :
-          else
-            git add -A
-            git commit -m "Updated the project data at $NOW"
-            git push origin master
-          fi
-        - cd ../
-        - rm -r essential-gene-data
 
 
 
