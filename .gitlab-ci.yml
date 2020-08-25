@@ -109,7 +109,7 @@ IDG:
         - cd "$MOUNT_POINT"
         
         # IDG        
-        - mysql -h tcrd.kmc.io -u tcrd tcrd540 -e 'select t.name, t.tdl, p.sym, p.uniprot, p.chr from target t, t2tc, protein p where t.id = t2tc.target_id and t2tc.protein_id = p.id' > idg_out.txt
+        - mysql -h tcrd.kmc.io -u tcrd tcrd540 -e 'select t.name, t.tdl, t.fam, p.sym, p.uniprot, p.chr from target t, t2tc, protein p where t.id = t2tc.target_id and t2tc.protein_id = p.id' > idg_out.txt
         
 
     artifacts:

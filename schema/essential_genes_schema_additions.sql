@@ -34,6 +34,7 @@ CREATE TABLE public.idg_tmp (
     id bigint NOT NULL,
     name character varying(255),
     tdl character varying(255),
+    family character varying(255),
     symbol character varying(255),
     uniprot_acc_id character varying(20),
     chr character varying(255)
@@ -73,6 +74,7 @@ CREATE TABLE public.idg (
     human_gene_id bigint,
     name character varying(255),
     tdl character varying(255),
+    family character varying(255),
     symbol character varying(255),
     uniprot_acc_id character varying(20),
     chr character varying(255)
