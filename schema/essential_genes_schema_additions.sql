@@ -801,7 +801,6 @@ ALTER SEQUENCE public.impc_adult_viability_id_seq OWNED BY public.impc_adult_via
 
 CREATE TABLE public.impc_significant_phenotype_tmp (
     id bigint NOT NULL,
-    ontology_db_id bigint,
     assertion_type character varying(255),
     assertion_type_id character varying(255),
     mp_term_id character varying(255),
@@ -820,9 +819,7 @@ CREATE TABLE public.impc_significant_phenotype_tmp (
     impc_strain_accession_id character varying(255),
     phenotyping_center character varying(255),
     project_name character varying(255),
-    project_fullname character varying(255),
     resource_name character varying(255),
-    resource_fullname character varying(255),
     sex character varying(255),
     zygosity character varying(255),
     pipeline_name character varying(255),
@@ -873,7 +870,6 @@ ALTER SEQUENCE public.impc_significant_phenotype_tmp_id_seq OWNED BY public.impc
 CREATE TABLE public.impc_significant_phenotype (
     id bigint NOT NULL,
     mouse_gene_id bigint,
-    ontology_db_id bigint,
     assertion_type character varying(255),
     assertion_type_id character varying(255),
     mp_term_id character varying(255),
@@ -892,9 +888,7 @@ CREATE TABLE public.impc_significant_phenotype (
     impc_strain_accession_id character varying(255),
     phenotyping_center character varying(255),
     project_name character varying(255),
-    project_fullname character varying(255),
     resource_name character varying(255),
-    resource_fullname character varying(255),
     sex character varying(255),
     zygosity character varying(255),
     pipeline_name character varying(255),
