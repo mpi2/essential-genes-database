@@ -12,28 +12,21 @@ set_stats_core_url()
 set_jq_filter_attributes()
 {
     jq_filter_attributes='"doc_id": .doc_id,
-                          "db_id": .db_id,
                           "data_type": .data_type,
-                          "mp_term_id": .mp_term_id,
-                          "mp_term_name": .mp_term_name,
+                          "mp_term_id_options": [.mp_term_id_options[]?] | join("|"),
+                          "mp_term_name_options": [.mp_term_name_options[]?] | join("|"),
                           "top_level_mp_term_ids": [.top_level_mp_term_id[]?] | join("|"),	
                           "top_level_mp_term_names": [.top_level_mp_term_name[]?] | join("|"),	
                           "life_stage_acc": .life_stage_acc,
                           "life_stage_name": .life_stage_name,
-                          "project_name": .project_name,
+                          "project_name": [.project_name[]?] | join("|"),
                           "phenotyping_center": .phenotyping_center,
                           "pipeline_stable_id": .pipeline_stable_id,
-                          "pipeline_stable_key": .pipeline_stable_key,
                           "pipeline_name": .pipeline_name,
-                          "pipeline_id": .pipeline_id,
-                          "procedure_stable_id": .procedure_stable_id,
-                          "procedure_stable_key": .procedure_stable_key,
+                          "procedure_stable_id": [.procedure_stable_id[]?] | join("|"),
                           "procedure_name": .procedure_name,
-                          "procedure_id": .procedure_id,
                           "parameter_stable_id": .parameter_stable_id,
-                          "parameter_stable_key": .parameter_stable_key,
                           "parameter_name": .parameter_name,
-                          "parameter_id": .parameter_id,
                           "colony_id": .colony_id,
                           "marker_symbol": .marker_symbol,
                           "marker_accession_id": .marker_accession_id,
@@ -54,7 +47,7 @@ obtain_stats_data()
 {
     set_stats_core_url;
     
-    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:(Success%20OR%20%22Not%20tested%20(No%20variation)%20-%20OK%22)%20AND%20resource_name:IMPC%20AND%20mp_term_id:*%20AND%20life_stage_name:%22Early%20adult%22';
+    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:(Successful%20OR%20NotProcessed)%20AND%20resource_name:IMPC%20AND%20mp_term_id:*%20AND%20life_stage_name:%22Early%20adult%22';
 
     set_jq_filter_attributes;
     
