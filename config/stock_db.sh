@@ -164,7 +164,7 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table imp
 # drop the temporary table
 # psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table impc_statistical_result_tmp"
 
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_statistical_result (doc_id, db_id, data_type, mp_term_id, mp_term_name, top_level_mp_term_ids, top_level_mp_term_names, life_stage_acc, life_stage_name, project_name, phenotyping_center, pipeline_stable_id, pipeline_stable_key, pipeline_name, pipeline_id, procedure_stable_id, procedure_stable_key, procedure_name, procedure_id, parameter_stable_id, parameter_stable_key, parameter_name, parameter_id, colony_id, impc_marker_symbol, impc_marker_accession_id, impc_allele_symbol, impc_allele_name, impc_allele_accession_id, impc_strain_name, impc_strain_accession_id, genetic_background, zygosity, status, p_value, significant) FROM '/mnt/impc_stats_data.tsv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_statistical_result (doc_id, data_type, mp_term_id, mp_term_name, top_level_mp_term_ids, top_level_mp_term_names, life_stage_acc, life_stage_name, project_name, phenotyping_center, pipeline_stable_id, pipeline_name, procedure_stable_id, procedure_name, parameter_stable_id, parameter_name, colony_id, impc_marker_symbol, impc_marker_accession_id, impc_allele_symbol, impc_allele_name, impc_allele_accession_id, impc_strain_name, impc_strain_accession_id, genetic_background, zygosity, status, p_value, significant) FROM '/mnt/impc_stats_data.tsv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
 
 
 
@@ -215,27 +215,45 @@ on t2.impc_allele_accession_id = t1.impc_allele_accession_id
 WHERE
 impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 
+# Note the revised query within the inner join handles cases
+# where there are multiple procedure_stable_id for a single Solr record
+# In the output file after the JSON transformation these would be concatenated.
+# For example as IMPC_ABR_002|IMPC_FER_001
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
 SET total_successful_procedure_count = t2.count,
     total_successful_procedure_list = t2.total_successful_procedure_list
 FROM impc_count t1
-INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
-   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as total_successful_procedure_list
+INNER JOIN (WITH 
+successful_procedures_by_impc_allele_accession AS ( select impc_allele_accession_id, 
+unnest(string_to_array(procedure_stable_id,'|')) as procedure_stable_id
    from impc_statistical_result
-  group by impc_allele_accession_id) as t2
+  group by impc_allele_accession_id, procedure_stable_id)
+select sp.impc_allele_accession_id, count(distinct(sp.procedure_stable_id)) as count, 
+   array_to_string(array_agg(distinct(sp.procedure_stable_id)),'|') as total_successful_procedure_list
+   from successful_procedures_by_impc_allele_accession sp
+  group by sp.impc_allele_accession_id) as t2
 on t2.impc_allele_accession_id = t1.impc_allele_accession_id
 WHERE
 impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
 
+# Note the revised query within the inner join handles cases
+# where there are multiple procedure_stable_id for a single Solr record
+# In the output file after the JSON transformation these would be concatenated.
+# For example as IMPC_ABR_002|IMPC_FER_001
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "UPDATE impc_count
 SET homozygous_total_successful_procedure_count = t2.count,
     homozygous_total_successful_procedure_list = t2.homozygous_total_successful_procedure_list
 FROM impc_count t1
-INNER JOIN (select impc_allele_accession_id, count(distinct(procedure_stable_id)) as count, 
-   array_to_string(array_agg(distinct(procedure_stable_id)),'|') as homozygous_total_successful_procedure_list
+INNER JOIN (WITH
+hom_successful_procedures_by_impc_allele_accession AS (select impc_allele_accession_id, 
+unnest(string_to_array(procedure_stable_id,'|')) as procedure_stable_id
    from impc_statistical_result
    where zygosity='homozygote'
-  group by impc_allele_accession_id) as t2
+  group by impc_allele_accession_id, procedure_stable_id)
+select hsp.impc_allele_accession_id, count(distinct(hsp.procedure_stable_id)) as count, 
+   array_to_string(array_agg(distinct(hsp.procedure_stable_id)),'|') as homozygous_total_successful_procedure_list
+   from hom_successful_procedures_by_impc_allele_accession hsp
+  group by hsp.impc_allele_accession_id) as t2
 on t2.impc_allele_accession_id = t1.impc_allele_accession_id
 WHERE
 impc_count.impc_allele_accession_id = t2.impc_allele_accession_id"
