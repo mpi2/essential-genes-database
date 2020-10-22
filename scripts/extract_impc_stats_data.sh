@@ -13,8 +13,8 @@ set_jq_filter_attributes()
 {
     jq_filter_attributes='"doc_id": .doc_id,
                           "data_type": .data_type,
-                          "mp_term_id_options": [.mp_term_id_options[]?] | join("|"),
-                          "mp_term_name_options": [.mp_term_name_options[]?] | join("|"),
+                          "mp_term_id": .mp_term_id,
+                          "mp_term_name": .mp_term_name,
                           "top_level_mp_term_ids": [.top_level_mp_term_id[]?] | join("|"),	
                           "top_level_mp_term_names": [.top_level_mp_term_name[]?] | join("|"),	
                           "life_stage_acc": .life_stage_acc,
