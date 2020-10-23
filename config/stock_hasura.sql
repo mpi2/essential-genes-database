@@ -839,7 +839,6 @@ public	human_gene	human_gene_synonym_relations	array	{"foreign_key_constraint_on
 public	mouse_gene	orthologs	array	{"foreign_key_constraint_on": {"table": {"name": "ortholog", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	mouse_gene	impc_adult_viabilities	array	{"foreign_key_constraint_on": {"table": {"name": "impc_adult_viability", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	mouse_gene	impc_significant_phenotypes	array	{"foreign_key_constraint_on": {"table": {"name": "impc_significant_phenotype", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
-public	mouse_gene	fusils	array	{"foreign_key_constraint_on": {"table": {"name": "fusil", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	mouse_gene_synonym	mouse_gene_synonym_relations	array	{"foreign_key_constraint_on": {"table": {"name": "mouse_gene_synonym_relation", "schema": "public"}, "column": "mouse_gene_synonym_id"}}	\N	f
 public	mouse_gene_synonym_relation	mouse_gene_synonym	object	{"foreign_key_constraint_on": "mouse_gene_synonym_id"}	\N	f
 public	mouse_mapping_filter	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
@@ -857,13 +856,14 @@ public	human_gene	hgnc_genes	array	{"foreign_key_constraint_on": {"table": {"nam
 public	hgnc_gene	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	ortholog	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	ortholog	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
+public	ortholog	fusils	array	{"foreign_key_constraint_on": {"table": {"name": "fusil", "schema": "public"}, "column": "ortholog_id"}}	\N	f
 public	clingen	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	achilles_gene_effect_raw	achillies_cell_type	object	{"foreign_key_constraint_on": "cell_type_name_id"}	\N	f
 public	achilles_gene_effect	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	achilles_gene_effect	achilles_gene_effect_raw	object	{"foreign_key_constraint_on": "raw_data_id"}	\N	f
 public	impc_embryo_viability	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
 public	impc_significant_phenotype	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
-public	fusil	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
+public	fusil	ortholog	object	{"foreign_key_constraint_on": "ortholog_id"}	\N	f
 \.
 
 
