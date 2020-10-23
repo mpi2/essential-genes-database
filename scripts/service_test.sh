@@ -99,8 +99,8 @@ mouse_embryo_viability_test()
 {
     echo "Mouse Embryo Viability Test"
     
-    query='{ "query": "{impc_embryo_viability(distinct_on: developmental_stage_name, where: {developmental_stage_name: {_eq: \"E15.5\"}}) {developmental_stage_name}}" }'    
-    expected_result='{"data":{"impc_embryo_viability":[{"developmental_stage_name":"E15.5"}]}}'
+    query='{ "query": "{impc_embryo_viability(distinct_on: life_stage_name, where: {life_stage_name: {_eq: \"E15.5\"}}) {life_stage_name}}" }'    
+    expected_result='{"data":{"impc_embryo_viability":[{"life_stage_name":"E15.5"}]}}'
     run_test "$query" "$expected_result"
     
 }
