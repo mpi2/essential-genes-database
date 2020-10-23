@@ -12,16 +12,14 @@ set_experiment_core_url()
 set_jq_filter_attributes_for_viability()
 {
     jq_filter_attributes='"parameter_stable_id": .parameter_stable_id,
-            "project_id": .project_id,
             "project_name": .project_name,
             "procedure_group": .procedure_group,
             "procedure_stable_id": .procedure_stable_id,
             "pipeline_stable_id": .pipeline_stable_id,
             "pipeline_name": .pipeline_name,
-            "phenotyping_center_id": .phenotyping_center_id,
             "phenotyping_center": .phenotyping_center,
-            "developmental_stage_acc": .developmental_stage_acc,
-            "developmental_stage_name": .developmental_stage_name,
+            "developmental_stage_acc": .life_stage_acc,
+            "developmental_stage_name": .life_stage_name,
             "gene_symbol": .gene_symbol,
             "gene_accession_id": .gene_accession_id,
             "colony_id": .colony_id,
