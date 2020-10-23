@@ -1076,7 +1076,7 @@ ALTER SEQUENCE public.impc_count_id_seq OWNED BY public.impc_count.id;
 
 CREATE TABLE public.fusil (
     id bigint NOT NULL,
-    mouse_gene_id bigint,
+    ortholog_id bigint,
     bin character varying(255),
     bin_code character varying(255)
 );
@@ -1522,7 +1522,7 @@ ALTER TABLE ONLY public.impc_count
 --
 
 ALTER TABLE ONLY public.fusil
-    ADD CONSTRAINT fk427m9tau92y023e8a69r54e9 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
+    ADD CONSTRAINT fk427m9tau92y023e8a69r54e9 FOREIGN KEY (ortholog_id) REFERENCES public.ortholog(id);
 
 
 
