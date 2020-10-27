@@ -62,4 +62,31 @@ obtain_stats_data()
 
 }
 
+
+obtain_viability_nonsig_stats_data()
+{
+    set_stats_core_url;
+    
+    # This method currently only fetches homozygous viability data for VIA_067_001
+    # The non-significant data represents viabile lines.
+    #
+    # To fully cover the categories covered by VIA_001_001 the additional parameter VIA_065_001
+    # would need to be retrieved with the hemizygous viability data
+    #
+    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:(Successful%20OR%20NotProcessed)%20AND%20resource_name:IMPC%20AND%20parameter_stable_id:IMPC_VIA_067_001%20AND%20life_stage_name:%22Early%20adult%22%20AND%20significant:false';
+
+    set_jq_filter_attributes;
+    
+    # This number is set low to keep the memory used by the script down.
+    # The script will make many requests to the solr server, 
+    # but in tests did not take much longer to complete than one making 10x fewer requests.   
+    documents_per_request=5000
+    
+    output_filename='impc_viability_nonsig_stats_data.tsv';
+    
+    process_parameter "$core_url" "$query_string" "$jq_filter_attributes" $documents_per_request "$output_filename";
+
+}
+
+obtain_viability_nonsig_stats_data
 obtain_stats_data

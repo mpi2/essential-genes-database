@@ -168,6 +168,22 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_sta
 
 
 
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy impc_nonsig_statistical_result_tmp (doc_id, data_type, mp_term_id, mp_term_name, top_level_mp_term_ids, top_level_mp_term_names, life_stage_acc, life_stage_name, project_name, phenotyping_center, pipeline_stable_id, pipeline_name, procedure_stable_id, procedure_name, parameter_stable_id, parameter_name, colony_id, impc_marker_symbol, impc_marker_accession_id, impc_allele_symbol, impc_allele_name, impc_allele_accession_id, impc_strain_name, impc_strain_accession_id, genetic_background, zygosity, status, p_value, significant) FROM '/mnt/impc_viability_nonsig_stats_data.tsv' with (DELIMITER E'\t', FORMAT CSV, header FALSE)"
+
+
+
+# Create the combined adult viability data table
+#
+# This integrates the VIA_001_001 (VIA_001) and VIA_067_001 (VIA_002) data
+#
+# Note: at this point that only relates to homozygous viability
+#
+# Hemizygous viability would need to add data on VIA_065_001 for VIA_002
+#
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO combined_adult_viability (mouse_gene_id, allele_accession_id, allele_symbol, category, colony_id, genetic_background, life_stage_acc, life_stage_name, pipeline_name, pipeline_stable_id, procedure_name, procedure_stable_id, parameter_name, parameter_stable_id, phenotyping_center, project_name, strain_accession_id, strain_name, zygosity) select v.mouse_gene_id, v.allele_accession_id, v.allele_symbol, v.category, v.colony_id, v.genetic_background, v.life_stage_acc, v.life_stage_name, v.pipeline_name, v.pipeline_stable_id, v.procedure_name, v.procedure_stable_id, v.parameter_name, v.parameter_stable_id, v.phenotyping_center, v.project_name, v.strain_accession_id, v.strain_name, v.zygosity from impc_adult_viability v where v.zygosity='homozygote' and v.life_stage_name='Earlyadult'"
+
+
+
 
 # Populate the table impc_count
 #

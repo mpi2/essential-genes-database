@@ -779,6 +779,59 @@ ALTER SEQUENCE public.impc_adult_viability_id_seq OWNED BY public.impc_adult_via
 
 
 
+--
+-- Name: combined_adult_viability; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.combined_adult_viability (
+    id bigint NOT NULL,
+    mouse_gene_id bigint,
+    allele_accession_id character varying(255),
+    allele_symbol character varying(255),
+    category character varying(255),
+    colony_id character varying(255),
+    genetic_background character varying(255),
+    life_stage_acc character varying(255),
+    life_stage_name character varying(255),
+    pipeline_name character varying(255),
+    pipeline_stable_id character varying(255),
+    procedure_name character varying(255),
+    procedure_stable_id character varying(255),
+    parameter_name character varying(255),
+    parameter_stable_id character varying(255),
+    phenotyping_center character varying(255),
+    project_name character varying(255),
+    strain_accession_id character varying(255),
+    strain_name character varying(255),
+    zygosity character varying(255)
+);
+
+
+
+ALTER TABLE public.combined_adult_viability OWNER TO batch_admin;
+
+--
+-- Name: public.combined_adult_viability_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.combined_adult_viability_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.combined_adult_viability_id_seq OWNER TO batch_admin;
+
+--
+-- Name: combined_adult_viability_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.combined_adult_viability_id_seq OWNED BY public.combined_adult_viability.id;
+
+
+
 
 
 
@@ -987,6 +1040,68 @@ ALTER SEQUENCE public.impc_statistical_result_id_seq OWNED BY public.impc_statis
 
 
 
+
+
+
+--
+-- Name: impc_nonsig_statistical_result_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.impc_nonsig_statistical_result_tmp (
+    id bigint NOT NULL,
+    doc_id character varying(255),
+    data_type character varying(255),
+    mp_term_id character varying(255),
+    mp_term_name character varying(255),
+    top_level_mp_term_ids text,
+    top_level_mp_term_names text,
+    life_stage_acc character varying(255),
+    life_stage_name character varying(255),
+    project_name character varying(255),
+    phenotyping_center character varying(255),
+    pipeline_stable_id character varying(255),
+    pipeline_name character varying(255),
+    procedure_stable_id character varying(255),
+    procedure_name character varying(255),
+    parameter_stable_id character varying(255),
+    parameter_name character varying(255),
+    colony_id character varying(255),
+    impc_marker_symbol character varying(255),
+    impc_marker_accession_id character varying(255),
+    impc_allele_symbol character varying(255),
+    impc_allele_name text,
+    impc_allele_accession_id character varying(255),
+    impc_strain_name character varying(255),
+    impc_strain_accession_id character varying(255),
+    genetic_background character varying(255),
+    zygosity character varying(255),
+    status character varying(255),
+    p_value float8,
+    significant boolean
+);
+
+
+ALTER TABLE public.impc_nonsig_statistical_result_tmp OWNER TO batch_admin;
+
+--
+-- Name: impc_nonsig_statistical_result_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.impc_nonsig_statistical_result_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.impc_nonsig_statistical_result_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: impc_nonsig_statistical_result_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.impc_nonsig_statistical_result_tmp_id_seq OWNED BY public.impc_nonsig_statistical_result_tmp.id;
 
 
 
@@ -1203,6 +1318,17 @@ ALTER TABLE ONLY public.impc_adult_viability ALTER COLUMN id SET DEFAULT nextval
 
 
 
+
+--
+-- Name: combined_adult_viability id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.combined_adult_viability ALTER COLUMN id SET DEFAULT nextval('public.combined_adult_viability_id_seq'::regclass);
+
+
+
+
+
 --
 -- Name: impc_significant_phenotype_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
@@ -1224,6 +1350,15 @@ ALTER TABLE ONLY public.impc_significant_phenotype ALTER COLUMN id SET DEFAULT n
 --
 
 ALTER TABLE ONLY public.impc_statistical_result ALTER COLUMN id SET DEFAULT nextval('public.impc_statistical_result_id_seq'::regclass);
+
+
+
+
+--
+-- Name: impc_nonsig_statistical_result_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_nonsig_statistical_result_tmp ALTER COLUMN id SET DEFAULT nextval('public.impc_nonsig_statistical_result_tmp_id_seq'::regclass);
 
 
 
@@ -1366,6 +1501,16 @@ ALTER TABLE ONLY public.impc_adult_viability
 
 
 --
+-- Name: combined_adult_viability combined_adult_viability_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.combined_adult_viability
+    ADD CONSTRAINT combined_adult_viability_pkey PRIMARY KEY (id);
+
+
+
+
+--
 -- Name: impc_significant_phenotype_tmp impc_significant_phenotype_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
 --
 
@@ -1390,6 +1535,15 @@ ALTER TABLE ONLY public.impc_significant_phenotype
 
 ALTER TABLE ONLY public.impc_statistical_result
     ADD CONSTRAINT impc_statistical_result_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: impc_nonsig_statistical_result_tmp impc_nonsig_statistical_result_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.impc_nonsig_statistical_result_tmp
+    ADD CONSTRAINT impc_nonsig_statistical_result_tmp_pkey PRIMARY KEY (id);
+
 
 
 --
@@ -1486,6 +1640,15 @@ ALTER TABLE ONLY public.impc_embryo_viability
 
 ALTER TABLE ONLY public.impc_adult_viability
     ADD CONSTRAINT fk929i1heu94j033e8a69r63a1 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
+
+
+
+--
+-- Name: combined_adult_viability fk956h1joa94j033e8a69r23c1; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.combined_adult_viability
+    ADD CONSTRAINT fk956h1joa94j033e8a69r23c1 FOREIGN KEY (mouse_gene_id) REFERENCES public.mouse_gene(id);
 
 
 
