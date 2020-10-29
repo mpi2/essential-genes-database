@@ -504,12 +504,12 @@ group by oo.id, bin, bin_code"
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "WITH
 mouse_genes_with_single_human_ortholog AS (select m.mgi_gene_acc_id from mouse_gene m, ortholog o where m.id=o.mouse_gene_id and o.support_count > 4 group by m.mgi_gene_acc_id having count(distinct(o.human_gene_id)) = 1),
 human_genes_with_single_mouse_ortholog AS (select h8.hgnc_acc_id from human_gene h8, ortholog o8 where h8.id=o8.human_gene_id and o8.support_count > 4 group by h8.hgnc_acc_id having count(distinct(o8.mouse_gene_id)) = 1),
-mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, impc_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.life_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, impc_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.life_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)),
+mouse_genes_with_distinct_homozgous_viability_call AS ((select m3.mgi_gene_acc_id from mouse_gene m3, combined_adult_viability v3 where m3.id = v3.mouse_gene_id and v3.zygosity='homozygote' and v3.life_stage_name='Earlyadult' group by m3.mgi_gene_acc_id having count(distinct(v3.id)) > 1 and count(distinct(v3.category))=1) UNION (select m4.mgi_gene_acc_id from mouse_gene m4, combined_adult_viability v4 where m4.id = v4.mouse_gene_id and v4.zygosity='homozygote' and v4.life_stage_name='Earlyadult' group by m4.mgi_gene_acc_id having count(distinct(v4.id)) = 1)),
 mouse_genes_allele_with_significant_procedures AS (select distinct(mouse_gene_id) from impc_count where homozygous_significant_procedure_count > 0),
 mouse_genes_allele_with_sufficient_successful_procedures AS (select distinct(mouse_gene_id) from impc_count where homozygous_total_successful_procedure_count >= 13),
 mouse_genes_allele_with_insufficient_successful_procedures AS (select distinct(mouse_gene_id) from impc_count where homozygous_total_successful_procedure_count < 13) 
 INSERT INTO fusil (ortholog_id, bin, bin_code) 
-select oo.id, 'Viable Insufficient Phenotype Procedures' as \"bin\", 'V.insuffProcedures' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, impc_adult_viability v
+select oo.id, 'Viable Insufficient Phenotype Procedures' as \"bin\", 'V.insuffProcedures' as \"bin_code\" from mouse_gene mm, human_gene hh, ortholog oo, achilles_gene_effect age, combined_adult_viability v
 where 
 mm.id=oo.mouse_gene_id and 
 mm.mgi_gene_acc_id in (select mgi_gene_acc_id from mouse_genes_with_single_human_ortholog) and 
