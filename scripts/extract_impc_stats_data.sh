@@ -47,7 +47,7 @@ obtain_stats_data()
 {
     set_stats_core_url;
     
-    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:(Successful%20OR%20NotProcessed)%20AND%20resource_name:IMPC%20AND%20mp_term_id:*%20AND%20life_stage_name:%22Early%20adult%22';
+    query_string='?q=*:*&fq=marker_symbol:*%20AND%20status:Successful%20AND%20resource_name:(IMPC%20OR%203i)%20AND%20life_stage_name:%22Early%20adult%22';
 
     set_jq_filter_attributes;
     
