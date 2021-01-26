@@ -192,7 +192,8 @@ gnomAD_pLoF:
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
         
-        - curl -sSLN -O https://storage.googleapis.com/gnomad-public/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz
+        # gnomAD URL updated 20210126 to reflect gnomAD web site change
+        - curl -sSLN -O https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/constraint/gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz
         - bgzip -d gnomad.v2.1.1.lof_metrics.by_gene.txt.bgz
         - mv gnomad.* gnomad.lof_metrics.by_gene.txt
         
