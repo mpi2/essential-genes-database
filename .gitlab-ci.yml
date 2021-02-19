@@ -1,4 +1,4 @@
-image: docker:stable
+image: $CI_REGISTRY/mouse-informatics/docker:latest
 
 variables:
    # When using dind service we need to instruct docker, to talk with the
@@ -38,8 +38,6 @@ variables:
    # see: https://gitlab.com/gitlab-com/gl-infra/production/issues/982
    DOCKER_TLS_CERTDIR: ""
 
-services:
-   - docker:dind
 
 # Use this command to look at your docker environment
 # Note: This step can be overwritten by before_script sections in specific jobs.
@@ -101,7 +99,7 @@ Human_data:
 
 IDG:
     stage: download
-    image: mysql:latest
+    image: $CI_REGISTRY/mouse-informatics/mysql:latest
     script:
         
         # Establish a data directory
@@ -119,7 +117,7 @@ IDG:
 
 
 IMPC_Viability:
-    image: ubuntu:latest
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: download
     before_script:
         - apt-get update && apt-get install -y jq curl && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -139,7 +137,7 @@ IMPC_Viability:
 
 
 IMPC_Phenotypes:
-    image: ubuntu:latest
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: download
     before_script:
         - apt-get update && apt-get install -y jq curl && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -159,7 +157,7 @@ IMPC_Phenotypes:
 
 
 IMPC_Stats:
-    image: ubuntu:latest
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: download
     before_script:
         - apt-get update && apt-get install -y jq curl && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -179,7 +177,7 @@ IMPC_Stats:
 
 
 gnomAD_pLoF:
-    image: ubuntu:latest
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: download
     before_script:
         - apt-get update && apt-get install -y autoconf automake make gcc perl zlib1g-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev git curl && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -207,7 +205,7 @@ gnomAD_pLoF:
 
 
 orthology_db_dump:
-    image: postgres:11-alpine
+    image: $CI_REGISTRY/mouse-informatics/postgres:11-alpine
     stage: download
     before_script:
         - apk add --update --no-cache curl
@@ -229,6 +227,9 @@ orthology_db_dump:
 
 build_image:
     stage: build
+    services:
+        - name: $CI_REGISTRY/mouse-informatics/dind:latest
+          alias: docker
     before_script:
         - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin  ${CI_REGISTRY}
         - NOW=$(date '+%Y-%m-%d-%H-%M-%S')
@@ -238,6 +239,9 @@ build_image:
         - export
         - source ${MOUNT_POINT}/datetime.env
         - echo ${NOW}
+        - sed -i "s|postgres:11.3|${LOCAL_GITLAB_POSTGRES_IMAGE}|g" Dockerfile
+
+
         - docker build -t batchdownload-db .  | tee ${MOUNT_POINT}/build.log
         - docker run --name batchdbcontainer -v "$MOUNT_POINT:/mnt" -d batchdownload-db
 
@@ -257,7 +261,8 @@ build_image:
         - docker commit batchdbcontainer "${CI_REGISTRY_IMAGE}":"${NOW}"
         
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${CI_REGISTRY_IMAGE}":latest
-        - docker push "${CI_REGISTRY_IMAGE}"  | tee ${MOUNT_POINT}/push.log
+        - docker push "${CI_REGISTRY_IMAGE}":"${NOW}"  | tee ${MOUNT_POINT}/push.log
+        - docker push "${CI_REGISTRY_IMAGE}":latest  | tee ${MOUNT_POINT}/push.log
 
         - docker logout ${CI_REGISTRY}
 
@@ -265,8 +270,10 @@ build_image:
         - echo "${DOCKER_HUB_PWD}" | docker login -u "${DOCKER_HUB_USER}" --password-stdin
  
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}":"${NOW}"
+        - docker push "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}":"${NOW}"  | tee ${MOUNT_POINT}/dockerhub-push-latest.log
+
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}":latest
-        - docker push "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}"  | tee ${MOUNT_POINT}/dockerhub-push-latest.log
+        - docker push "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}":latest  | tee ${MOUNT_POINT}/dockerhub-push-latest.log
 
         - docker logout
         
@@ -288,44 +295,12 @@ build_image:
     
 
 
-#dev-deploy:
-#  stage: dev-deploy
-#  image: dtzar/helm-kubectl:2.13.0
-#  only:
-#    refs:
-#      - master
-#  script:
-#    - source ${MOUNT_POINT}/datetime.env
-#    - echo ${NOW}
-#    #
-#    - kubectl config set-cluster local --server="${KUBERNETES_ENDPOINT}"
-#    - kubectl config set clusters.local.certificate-authority-data "${KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
-#    - kubectl config set-credentials "${KUBERNETES_DEV_USER}" --token="${KUBERNETES_DEV_USER_TOKEN}"
-#    - kubectl config set-context "${KUBERNETES_DEV_NAMESPACE}" --cluster=local --user=${KUBERNETES_DEV_USER} --namespace="${KUBERNETES_DEV_NAMESPACE}"
-#    - kubectl config use-context "${KUBERNETES_DEV_NAMESPACE}"
-#    - kubectl version
-#    #
-#    - sed -i "s/latest/${NOW}/g" kube/dev/database/essential-genes-database-deployment.yaml
-#    - sed -i "s/STRING_REPLACED_DURING_REDEPLOY/$(date)/g" kube/dev/database/essential-genes-database-deployment.yaml
-#    
-#    - |
-#      if kubectl apply -f kube/dev/database/essential-genes-database-deployment.yaml --record | grep -q unchanged; then
-#          echo "=> Patching deployment to force image update."
-#          kubectl patch -f kube/dev/database/essential-genes-database-deployment.yaml --record -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-#      else
-#          echo "=> Deployment apply has changed the object, no need to force image update."
-#      fi
-#
-#
-#    - kubectl rollout status -f kube/dev/database/essential-genes-database-deployment.yaml
-#    - kubectl get all,ing 
-
 
 hh-dev-deploy:
   stage: dev-deploy
   # Use an image with helm v2.14.3, kubectl v1.15.2, alpine 3.10
   # rancher/hyperkube:v1.15.3-rancher1 installed on the hh cluster
-  image: dtzar/helm-kubectl:2.14.3
+  image: $CI_REGISTRY/mouse-informatics/helm-kubectl-alpine:latest
   only:
     refs:
       - master
@@ -361,7 +336,7 @@ hx-dev-deploy:
   stage: dev-deploy
   # Use an image with helm v2.14.3, kubectl v1.15.2, alpine 3.10
   # rancher/hyperkube:v1.15.3-rancher1 installed on the hh cluster
-  image: dtzar/helm-kubectl:2.14.3
+  image: $CI_REGISTRY/mouse-informatics/helm-kubectl-alpine:latest
   only:
     refs:
       - master
@@ -394,7 +369,7 @@ hx-dev-deploy:
 
 
 dev-test:
-    image: ubuntu:latest
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: dev-test
     before_script:
         - apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -411,45 +386,13 @@ dev-test:
         paths:
             - "$MOUNT_POINT/"
 
-#production-deploy:
-#  stage: production-deploy
-#  image: dtzar/helm-kubectl:2.13.0
-#  only:
-#    refs:
-#      - master
-#  script:
-#    - source ${MOUNT_POINT}/datetime.env
-#    - echo ${NOW}
-#    #
-#    - kubectl config set-cluster local --server="${KUBERNETES_ENDPOINT}"
-#    - kubectl config set clusters.local.certificate-authority-data "${KUBERNETES_CERTIFICATE_AUTHORITY_DATA}"
-#    - kubectl config set-credentials "${KUBERNETES_USER}" --token="${KUBERNETES_USER_TOKEN}"
-#    - kubectl config set-context "${KUBERNETES_NAMESPACE}" --cluster=local --user=${KUBERNETES_USER} --namespace="${KUBERNETES_NAMESPACE}"
-#    - kubectl config use-context "${KUBERNETES_NAMESPACE}"
-#    - kubectl version
-#    #
-#    - sed -i "s/latest/${NOW}/g" kube/production/database/essential-genes-database-deployment.yaml
-#    - sed -i "s/STRING_REPLACED_DURING_REDEPLOY/$(date)/g" kube/production/database/essential-genes-database-deployment.yaml
-#    
-#    - |
-#      if kubectl apply -f kube/production/database/essential-genes-database-deployment.yaml --record | grep -q unchanged; then
-#          echo "=> Patching deployment to force image update."
-#          kubectl patch -f kube/production/database/essential-genes-database-deployment.yaml --record -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-last-updated\":\"$(date +'%s')\"}}}}}"
-#      else
-#          echo "=> Deployment apply has changed the object, no need to force image update."
-#      fi
-#
-#
-#    - kubectl rollout status -f kube/production/database/essential-genes-database-deployment.yaml
-#    - kubectl get all,ing 
-
 
 
 hh-production-deploy:
   stage: production-deploy
   # Use an image with helm v2.14.3, kubectl v1.15.2, alpine 3.10
   # rancher/hyperkube:v1.15.3-rancher1 installed on the hh cluster
-  image: dtzar/helm-kubectl:2.14.3
+  image: $CI_REGISTRY/mouse-informatics/helm-kubectl-alpine:latest
   only:
     refs:
       - master
@@ -485,7 +428,7 @@ hx-production-deploy:
   stage: production-deploy
   # Use an image with helm v2.14.3, kubectl v1.15.2, alpine 3.10
   # rancher/hyperkube:v1.15.3-rancher1 installed on the hh cluster
-  image: dtzar/helm-kubectl:2.14.3
+  image: $CI_REGISTRY/mouse-informatics/helm-kubectl-alpine:latest
   only:
     refs:
       - master
@@ -516,8 +459,9 @@ hx-production-deploy:
     - kubectl get pod,deployment,rs
 
 
+
 production-test:
-    image: ubuntu:latest
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: production-test
     before_script:
         - apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
