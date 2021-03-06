@@ -127,8 +127,7 @@ IDG_GitHub:
         - mkdir -p "$MOUNT_POINT"
         - cd "$MOUNT_POINT"
         
-        - curl -sSLN -O https://raw.githubusercontent.com/druggablegenome/IDGTargets/master/IDG_TargetList_CurrentVersion.json
-        - source "$CI_PROJECT_DIR"/scripts/format_idg_data.sh        
+        - source "$CI_PROJECT_DIR"/scripts/fetch_idg_data.sh        
 
     artifacts:
         paths:
