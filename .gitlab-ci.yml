@@ -116,6 +116,26 @@ IDG:
 
 
 
+IDG_GitHub:
+    stage: download
+    image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
+    before_script:
+        - apt-get update && apt-get install -y jq curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+    script:
+        
+        # Establish a data directory
+        - mkdir -p "$MOUNT_POINT"
+        - cd "$MOUNT_POINT"
+        
+        - curl -sSLN -O https://raw.githubusercontent.com/druggablegenome/IDGTargets/master/IDG_TargetList_CurrentVersion.json
+        - source "$CI_PROJECT_DIR"/scripts/format_idg_data.sh        
+
+    artifacts:
+        paths:
+            - "$MOUNT_POINT/"
+
+
+
 IMPC_Viability:
     image: $CI_REGISTRY/mouse-informatics/ubuntu:latest
     stage: download
