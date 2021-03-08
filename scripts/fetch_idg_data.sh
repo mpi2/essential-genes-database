@@ -42,7 +42,7 @@ fetch_data()
     
     printf '%s' $json | \
     jq  --raw-output '(map(keys) | add | unique) as $keys | 
-                      map([.[ $keys[] ]|tostring])[] | 
+                      $keys,map([.[ $keys[] ]|tostring])[] | 
                       @tsv' >> "$2";
 }
 
