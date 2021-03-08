@@ -842,6 +842,7 @@ public	mouse_gene	impc_significant_phenotypes	array	{"foreign_key_constraint_on"
 public	mouse_gene_synonym	mouse_gene_synonym_relations	array	{"foreign_key_constraint_on": {"table": {"name": "mouse_gene_synonym_relation", "schema": "public"}, "column": "mouse_gene_synonym_id"}}	\N	f
 public	mouse_gene_synonym_relation	mouse_gene_synonym	object	{"foreign_key_constraint_on": "mouse_gene_synonym_id"}	\N	f
 public	mouse_mapping_filter	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
+public	pharos	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	idg	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	achillies_cell_types	achilles_gene_effect_raws	array	{"foreign_key_constraint_on": {"table": {"name": "achilles_gene_effect_raw", "schema": "public"}, "column": "cell_type_name_id"}}	\N	f
 public	achilles_gene_effect_raw	achilles_gene_effects	array	{"foreign_key_constraint_on": {"table": {"name": "achilles_gene_effect", "schema": "public"}, "column": "raw_data_id"}}	\N	f
@@ -849,6 +850,7 @@ public	gnomad_plof	human_gene	object	{"foreign_key_constraint_on": "human_gene_i
 public	impc_adult_viability	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
 public	impc_count	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
 public	human_gene	idgs	array	{"foreign_key_constraint_on": {"table": {"name": "idg", "schema": "public"}, "column": "human_gene_id"}}	\N	f
+public	human_gene	pharos	array	{"foreign_key_constraint_on": {"table": {"name": "pharos", "schema": "public"}, "column": "human_gene_id"}}	\N	f
 public	mouse_gene	impc_embryo_viabilities	array	{"foreign_key_constraint_on": {"table": {"name": "impc_embryo_viability", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	mouse_gene	impc_counts	array	{"foreign_key_constraint_on": {"table": {"name": "impc_count", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	mouse_gene_synonym_relation	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
@@ -918,6 +920,7 @@ public	mouse_gene_synonym_relation	{"custom_root_fields": {}, "custom_column_nam
 public	mouse_mapping_filter	{"custom_root_fields": {}, "custom_column_names": {}}	f	f
 public	ortholog	{"custom_root_fields": {}, "custom_column_names": {}}	f	f
 public	idg	{"custom_root_fields": {}, "custom_column_names": {}}	f	f
+public	pharos	{"custom_root_fields": {}, "custom_column_names": {}}	f	f
 public	clingen	{"custom_root_fields": {}, "custom_column_names": {}}	f	f
 public	achillies_cell_types	{"custom_root_fields": {}, "custom_column_names": {}}	f	f
 public	achilles_gene_effect_raw	{"custom_root_fields": {}, "custom_column_names": {}}	f	f

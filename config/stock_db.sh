@@ -33,19 +33,20 @@ for i in ortholog hgnc_gene mouse_gene mouse_gene_synonym mouse_gene_synonym_rel
 	psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /mnt/orthologydb_"$i".sql
 done;
 
-# IDG data 
-# Load the original IDG data into a temporary table.
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp (name, tdl, family, symbol, uniprot_acc_id, chr) FROM '/mnt/idg_out.txt' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
+
+# Pharos data 
+# Load the original pharos data into a temporary table.
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy pharos_tmp (name, tdl, family, symbol, uniprot_acc_id, chr) FROM '/mnt/pharos_out.txt' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
 
 # Construct the final table - match on Uniprot IDs
 #
 # Initial step based on exact match of Uniprot ID, assuming that only one ID is stored in the HGNC Uniprot_acc_ids field.
 # This migrates most of the data.
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, family, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.family, i.symbol, i.uniprot_acc_id, i.chr from idg_tmp i, hgnc_gene g, human_gene h where i.uniprot_acc_id=g.uniprot_acc_ids and g.human_gene_id = h.id"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO pharos (human_gene_id, name, tdl, family, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.family, i.symbol, i.uniprot_acc_id, i.chr from pharos_tmp i, hgnc_gene g, human_gene h where i.uniprot_acc_id=g.uniprot_acc_ids and g.human_gene_id = h.id"
 
 # Second step to load the remaining data
 # (Note: The hgnc gene table contains an array of uniprot ids hence matching is based on array 'is contained by' function)
-# This is an expensive operation if carried out for all entries in idg_tmp takes several minutes to complete.
+# This is an expensive operation if carried out for all entries in pharos_tmp takes several minutes to complete.
 # It is used here to finish migration of the data for cases where the HGNC entry has multiple 
 # Uniprot IDs separated by a '|' character.
 #
@@ -53,7 +54,19 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO id
 # also correspond to separate entries for EPPIN and WFDC6 that are already in the system. 
 # Running the array comparison method over all the data will load this entry.
 # 
-psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, name, tdl, family, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.family, i.symbol, i.uniprot_acc_id, i.chr from ( select * from idg_tmp where uniprot_acc_id not in (select uniprot_acc_id from idg) ) as i, hgnc_gene g, human_gene h where string_to_array(i.uniprot_acc_id, '') <@ string_to_array(g.uniprot_acc_ids,'|') and g.human_gene_id = h.id"
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO pharos (human_gene_id, name, tdl, family, symbol, uniprot_acc_id, chr) select h.id, i.name,i.tdl, i.family, i.symbol, i.uniprot_acc_id, i.chr from ( select * from pharos_tmp where uniprot_acc_id not in (select uniprot_acc_id from pharos) ) as i, hgnc_gene g, human_gene h where string_to_array(i.uniprot_acc_id, '') <@ string_to_array(g.uniprot_acc_ids,'|') and g.human_gene_id = h.id"
+
+# drop the temporary table
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table pharos_tmp"
+
+
+
+# IDG GitHub data 
+# Load the original IDG data into a temporary table.
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy idg_tmp (symbol, family) FROM '/mnt/idg_target_list.tsv' with (DELIMITER E'\t', FORMAT CSV, header TRUE)"
+
+# Construct the final table - match on Human symbols
+psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO idg (human_gene_id, family) select h.id, i.family from idg_tmp i, human_gene h where i.symbol=h.symbol"
 
 # drop the temporary table
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg_tmp"

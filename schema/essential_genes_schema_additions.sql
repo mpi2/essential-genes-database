@@ -25,12 +25,12 @@ GRANT ALL ON schema public TO batch_admin;
 
 
 --
--- Name: idg_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+-- Name: pharos_tmp; Type: TABLE; Schema: public; Owner: batch_admin
 --
 
 
 
-CREATE TABLE public.idg_tmp (
+CREATE TABLE public.pharos_tmp (
     id bigint NOT NULL,
     name character varying(255),
     tdl character varying(255),
@@ -38,6 +38,84 @@ CREATE TABLE public.idg_tmp (
     symbol character varying(255),
     uniprot_acc_id character varying(20),
     chr character varying(255)
+);
+
+
+ALTER TABLE public.pharos_tmp OWNER TO batch_admin;
+
+
+--
+-- Name: pharos_tmp_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.pharos_tmp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pharos_tmp_id_seq OWNER TO batch_admin;
+
+--
+-- Name: pharos_tmp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.pharos_tmp_id_seq OWNED BY public.pharos_tmp.id;
+
+
+--
+-- Name: pharos; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+CREATE TABLE public.pharos (
+    id bigint NOT NULL,
+    human_gene_id bigint,
+    name character varying(255),
+    tdl character varying(255),
+    family character varying(255),
+    symbol character varying(255),
+    uniprot_acc_id character varying(20),
+    chr character varying(255)
+);
+
+
+ALTER TABLE public.pharos OWNER TO batch_admin;
+
+--
+-- Name: pharos_id_seq; Type: SEQUENCE; Schema: public; Owner: batch_admin
+--
+
+CREATE SEQUENCE public.pharos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pharos_id_seq OWNER TO batch_admin;
+
+--
+-- Name: pharos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: batch_admin
+--
+
+ALTER SEQUENCE public.pharos_id_seq OWNED BY public.pharos.id;
+
+
+
+
+--
+-- Name: idg_tmp; Type: TABLE; Schema: public; Owner: batch_admin
+--
+
+
+
+CREATE TABLE public.idg_tmp (
+    id bigint NOT NULL,
+    symbol character varying(255),
+    family character varying(255)
 );
 
 
@@ -72,12 +150,7 @@ ALTER SEQUENCE public.idg_tmp_id_seq OWNED BY public.idg_tmp.id;
 CREATE TABLE public.idg (
     id bigint NOT NULL,
     human_gene_id bigint,
-    name character varying(255),
-    tdl character varying(255),
-    family character varying(255),
-    symbol character varying(255),
-    uniprot_acc_id character varying(20),
-    chr character varying(255)
+    family character varying(255)
 );
 
 
@@ -102,6 +175,7 @@ ALTER TABLE public.idg_id_seq OWNER TO batch_admin;
 --
 
 ALTER SEQUENCE public.idg_id_seq OWNED BY public.idg.id;
+
 
 
 
@@ -1221,6 +1295,21 @@ ALTER SEQUENCE public.fusil_id_seq OWNED BY public.fusil.id;
 
 
 --
+-- Name: pharos_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.pharos_tmp ALTER COLUMN id SET DEFAULT nextval('public.pharos_tmp_id_seq'::regclass);
+
+
+--
+-- Name: pharos id; Type: DEFAULT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.pharos ALTER COLUMN id SET DEFAULT nextval('public.pharos_id_seq'::regclass);
+
+
+
+--
 -- Name: idg_tmp id; Type: DEFAULT; Schema: public; Owner: batch_admin
 --
 
@@ -1381,6 +1470,24 @@ ALTER TABLE ONLY public.fusil ALTER COLUMN id SET DEFAULT nextval('public.fusil_
 
 
 
+
+
+
+
+--
+-- Name: pharos_tmp pharos_tmp_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.pharos_tmp
+    ADD CONSTRAINT pharos_tmp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pharos pharos_pkey; Type: CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.pharos
+    ADD CONSTRAINT pharos_pkey PRIMARY KEY (id);
 
 
 
@@ -1572,11 +1679,21 @@ ALTER TABLE ONLY public.fusil
 
 
 --
--- Name: idg fk993i1het18j033e8a67r63t9; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+-- Name: pharos fk993i1het18j033e8a67r63t9; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
+--
+
+ALTER TABLE ONLY public.pharos
+    ADD CONSTRAINT fk993i1het18j033e8a67r63t9 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+
+
+
+
+--
+-- Name: idg fk948c1hre17j021e7b61r23a6; Type: FK CONSTRAINT; Schema: public; Owner: batch_admin
 --
 
 ALTER TABLE ONLY public.idg
-    ADD CONSTRAINT fk993i1het18j033e8a67r63t9 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
+    ADD CONSTRAINT fk948c1hre17j021e7b61r23a6 FOREIGN KEY (human_gene_id) REFERENCES public.human_gene(id);
 
 
 
