@@ -160,12 +160,12 @@ hgnc_gene_test()
     
 }
 
-idg_test()
+pharos_test()
 {
-    echo "IDG Test"
+    echo "Pharos Test"
     
-    query='{ "query": "{idg(distinct_on: tdl, where: {tdl: {_in: [\"Tbio\", \"Tchem\", \"Tclin\", \"Tdark\"]}}, order_by: {tdl: asc}) {tdl}}" }'    
-    expected_result='{"data":{"idg":[{"tdl":"Tbio"}, {"tdl":"Tchem"}, {"tdl":"Tclin"}, {"tdl":"Tdark"}]}}'
+    query='{ "query": "{pharos(distinct_on: tdl, where: {tdl: {_in: [\"Tbio\", \"Tchem\", \"Tclin\", \"Tdark\"]}}, order_by: {tdl: asc}) {tdl}}" }'    
+    expected_result='{"data":{"pharos":[{"tdl":"Tbio"}, {"tdl":"Tchem"}, {"tdl":"Tclin"}, {"tdl":"Tdark"}]}}'
     run_test "$query" "$expected_result"
     
 }
@@ -226,7 +226,7 @@ human_tests()
     human_gene_test
     human_gene_synonym_test
     hgnc_gene_test
-    idg_test
+    pharos_test
     clingen_test
     achilles_test
     gnomad_test
