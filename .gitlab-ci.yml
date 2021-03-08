@@ -300,7 +300,8 @@ build_image:
 
     dependencies:
         - Human_data
-        - IDG
+        - Pharos
+        - IDG_GitHub
         - IMPC_Viability
         - IMPC_Phenotypes
         - IMPC_Stats
