@@ -170,6 +170,16 @@ pharos_test()
     
 }
 
+idg_test()
+{
+    echo "IDG Test"
+    
+    query='{ "query": "{idg(distinct_on: family, where: {family: {_in: [\"GPCR\", \"IonChannel\", \"Kinase\"]}}, order_by: {family: asc}) {family}}" }'    
+    expected_result='{"data":{"idg":[{"family":"GPCR"}, {"family":"IonChannel"}, {"family":"Kinase"}]}}'
+    run_test "$query" "$expected_result"
+    
+}
+
 clingen_test()
 {
     echo "ClinGen Test"
@@ -227,6 +237,7 @@ human_tests()
     human_gene_synonym_test
     hgnc_gene_test
     pharos_test
+    idg_test
     clingen_test
     achilles_test
     gnomad_test
