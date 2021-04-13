@@ -281,6 +281,9 @@ build_image:
         - docker exec batchdbcontainer sh -c "rm -r /usr/local/data"
         
         - echo "${CI_REGISTRY_IMAGE}":"${NOW}"
+        
+        # Required to make sure there is enough time for the db to shut down.
+        - docker stop -t 120 batchdbcontainer
         - docker commit batchdbcontainer "${CI_REGISTRY_IMAGE}":"${NOW}"
         
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${CI_REGISTRY_IMAGE}":latest
