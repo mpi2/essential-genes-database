@@ -49,3 +49,20 @@ fetch_data()
 IDG_DATA_URL='https://raw.githubusercontent.com/druggablegenome/IDGTargets/master/IDG_TargetList_CurrentVersion.json';
 
 fetch_data "${IDG_DATA_URL}" "idg_target_list.tsv"
+
+# fetch_data "${IDG_DATA_URL}" "idg_target_list_current.tsv"
+# 
+# 
+# IDG_Y1_DATA_URL='https://raw.githubusercontent.com/druggablegenome/IDGTargets/master/IDG_TargetList_Y1.json';
+# 
+# fetch_data "${IDG_Y1_DATA_URL}" "idg_target_list_Y1.tsv"
+# 
+# 
+# IDG_Y3_DATA_URL='https://raw.githubusercontent.com/druggablegenome/IDGTargets/master/IDG_TargetList_Y3.json';
+# 
+# fetch_data "${IDG_Y3_DATA_URL}" "idg_target_list_Y3.tsv"
+# 
+# 
+# IDG_Y4_DATA_URL='https://raw.githubusercontent.com/druggablegenome/IDGTargets/master/IDG_TargetList_Y4.json';
+# 
+# fetch_data "${IDG_Y4_DATA_URL}" "idg_target_list_Y4.tsv"
