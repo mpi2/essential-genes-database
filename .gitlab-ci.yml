@@ -302,6 +302,10 @@ build_image:
         - docker push "${DOCKER_HUB_USER}"/"${DOCKER_HUB_REPO}":latest  | tee ${MOUNT_POINT}/dockerhub-push-latest.log
 
         - docker logout
+
+        # Reduce the number of files saved as artifacts
+        - rm ${MOUNT_POINT}/*.tsv
+        - rm ${MOUNT_POINT}/*.csv
         
 
 
