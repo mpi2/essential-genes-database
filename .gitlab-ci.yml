@@ -411,7 +411,11 @@ dev-test:
         - cd "$MOUNT_POINT"
         
         - source "$CI_PROJECT_DIR"/scripts/service_test.sh  | tee ${MOUNT_POINT}/dev-test.log
-        
+ 
+        # Reduce the number of files saved as artifacts
+        - rm ${MOUNT_POINT}/*.tsv
+        - rm ${MOUNT_POINT}/*.csv
+       
 
     artifacts:
         paths:
@@ -504,6 +508,9 @@ production-test:
         
         - source "$CI_PROJECT_DIR"/scripts/service_test.sh -p  | tee ${MOUNT_POINT}/production-test.log
         
+        # Reduce the number of files saved as artifacts
+        - rm ${MOUNT_POINT}/*.tsv
+        - rm ${MOUNT_POINT}/*.csv
 
     artifacts:
         paths:
