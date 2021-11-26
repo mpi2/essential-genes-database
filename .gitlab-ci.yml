@@ -290,7 +290,7 @@ build_image:
         - docker exec batchdbcontainer sh -c "rm -r /usr/local/data"
         - docker stop -t 120 batchdbcontainer
 
-        
+
         # Package for production using an alpine based container
 
         - sed -i "s|postgres|${LOCAL_GITLAB_POSTGRES_IMAGE}|g" Dockerfile-production
@@ -303,6 +303,8 @@ build_image:
         # Required to make sure there is enough time for the db to shut down.
         - docker stop -t 120 prodbatchdbcontainer
         - docker commit prodbatchdbcontainer "${CI_REGISTRY_IMAGE}":"${NOW}"
+
+        - rm "$MOUNT_POINT"/database.sql
         
         - docker tag "${CI_REGISTRY_IMAGE}":"${NOW}" "${CI_REGISTRY_IMAGE}":latest
         - docker push "${CI_REGISTRY_IMAGE}":"${NOW}"  | tee ${MOUNT_POINT}/push.log
