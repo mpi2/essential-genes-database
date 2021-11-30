@@ -268,7 +268,7 @@ build_image:
         - export
         - source ${MOUNT_POINT}/datetime.env
         - echo ${NOW}
-        - sed -i "s|postgres|${LOCAL_GITLAB_POSTGRES_IMAGE}|g" Dockerfile
+        - sed -i "s|FROM postgres|FROM ${LOCAL_GITLAB_POSTGRES_IMAGE}|g" Dockerfile
 
 
         - docker build -t batchdownload-db .  | tee ${MOUNT_POINT}/build.log
@@ -293,7 +293,7 @@ build_image:
 
         # Package for production using an alpine based container
 
-        - sed -i "s|postgres|${LOCAL_GITLAB_POSTGRES_IMAGE}|g" Dockerfile-production
+        - sed -i "s|FROM postgres|FROM ${LOCAL_GITLAB_POSTGRES_IMAGE}|g" Dockerfile-production
         - docker build -t prod-batch-db -f Dockerfile-production .  | tee ${MOUNT_POINT}/build-production.log
         - docker run --name prodbatchdbcontainer -v "$MOUNT_POINT:/mnt" -d prod-batch-db
         - sleep 120
