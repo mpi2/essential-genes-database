@@ -841,7 +841,7 @@ public	mouse_gene	impc_adult_viabilities	array	{"foreign_key_constraint_on": {"t
 public	mouse_gene	impc_significant_phenotypes	array	{"foreign_key_constraint_on": {"table": {"name": "impc_significant_phenotype", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	mouse_gene_synonym	mouse_gene_synonym_relations	array	{"foreign_key_constraint_on": {"table": {"name": "mouse_gene_synonym_relation", "schema": "public"}, "column": "mouse_gene_synonym_id"}}	\N	f
 public	mouse_gene_synonym_relation	mouse_gene_synonym	object	{"foreign_key_constraint_on": "mouse_gene_synonym_id"}	\N	f
-public	mouse_mapping_filter	mouse_gene	object	{"foreign_key_constraint_on": "mouse_gene_id"}	\N	f
+public	mouse_gene	mouse_mapping_filters	array	{"foreign_key_constraint_on": {"table": {"name": "mouse_mapping_filter", "schema": "public"}, "column": "mouse_gene_id"}}	\N	f
 public	pharos	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	idg	human_gene	object	{"foreign_key_constraint_on": "human_gene_id"}	\N	f
 public	achillies_cell_types	achilles_gene_effect_raws	array	{"foreign_key_constraint_on": {"table": {"name": "achilles_gene_effect_raw", "schema": "public"}, "column": "cell_type_name_id"}}	\N	f
