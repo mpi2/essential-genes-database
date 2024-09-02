@@ -21,7 +21,7 @@ set -e
 # Unix socket connections made inside the container.
 
 
-printf '#! /usr/bin/bash\nstart=%s\n' $(date +"%s") > /usr/local/data/postgres_processing_time.sh
+printf '#! /bin/bash\nstart=%s\n' $(date +"%s") > /usr/local/data/postgres_processing_time.sh
 
 
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /mnt/orthologydb_schema.sql
@@ -75,7 +75,10 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg
 
 # ClinGen data
 # The first 6 lines of the file describe the contents of the file, so need to be removed. 
-tail -n +7 /mnt/gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM STDIN with (DELIMITER E',', FORMAT CSV, header FALSE)"
+# Note: From 2024-04:
+# Clingen have stopped providing a date in their file 
+# - so have added one using sed to load the file.
+tail -n +7 /mnt/gene-dosage.csv | sed -e "s/\"\"$/\"2014-12-11T15:51:23Z\"/" | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, haploinsufficiency, triplosensitivity, report, date) FROM STDIN with (DELIMITER E',', FORMAT CSV, header FALSE)"
 
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO clingen (human_gene_id, haploinsufficiency, triplosensitivity, report, date) 
 select h.id, t.haploinsufficiency, t.triplosensitivity, t.report, t.date from human_gene h, clingen_tmp t where h.hgnc_acc_id = t.hgnc_acc_id"
