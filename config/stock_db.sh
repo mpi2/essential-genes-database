@@ -78,8 +78,12 @@ psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DROP table idg
 # Note: From 2024-04:
 # Clingen have created a new file (downloadall) with additional information
 # and changed the format of the original download file.
+#
+# Note: Not all entries are now associated with dates, 
+# so a date is added using sed to ensure the data loads. 
+# The date is not important for the essential genes database.
 
-tail -n +7 /mnt/gene-dosage.csv | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, grch37, grch38, haploinsufficiency, triplosensitivity, report, date) FROM STDIN with (DELIMITER E',', FORMAT CSV, header FALSE)"
+tail -n +7 /mnt/gene-dosage.csv | sed -e "s/\"\"$/\"2014-12-11T15:51:23Z\"/" | psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\copy clingen_tmp (symbol, hgnc_acc_id, grch37, grch38, haploinsufficiency, triplosensitivity, report, date) FROM STDIN with (DELIMITER E',', FORMAT CSV, header FALSE)"
 
 psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "INSERT INTO clingen (human_gene_id, haploinsufficiency, triplosensitivity, report, date) 
 select h.id, t.haploinsufficiency, t.triplosensitivity, t.report, t.date from human_gene h, clingen_tmp t where h.hgnc_acc_id = t.hgnc_acc_id"
