@@ -191,6 +191,8 @@ CREATE TABLE public.clingen_tmp (
     id bigint NOT NULL,
     symbol character varying(255),
     hgnc_acc_id character varying(255),
+    grch37 character varying(255),
+    grch38 character varying(255),
     haploinsufficiency character varying(255),
     triplosensitivity character varying(255),
     report character varying(255),

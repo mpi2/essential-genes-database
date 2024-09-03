@@ -83,7 +83,8 @@ Human_data:
         # - cp "$CI_PROJECT_DIR"/data/idg_out.txt "$MOUNT_POINT"/idg_out.txt
         
         # ClinGen
-        - curl -sSLN -o gene-dosage.csv https://search.clinicalgenome.org/kb/gene-dosage/download
+        # Note:2024-09 changed the link from download to downloadall
+        - curl -sSLN -o gene-dosage.csv https://search.clinicalgenome.org/kb/gene-dosage/downloadall
         
         # DepMap Achilles_gene_effect.csv - DepMap Public 20Q4v2
         - curl -sSLN -o achilles_gene_effect.csv https://ndownloader.figshare.com/files/25770029
