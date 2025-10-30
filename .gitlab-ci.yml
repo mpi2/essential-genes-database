@@ -38,6 +38,7 @@ variables:
    # see: https://gitlab.com/gitlab-com/gl-infra/production/issues/982
    DOCKER_TLS_CERTDIR: ""
    SCAN_KUBERNETES_MANIFESTS: "true"
+   GITLAB_ADVANCED_SAST_ENABLED: 'true'
 
 
 # Use this command to look at your docker environment
@@ -345,6 +346,8 @@ build_image:
         paths:
             - ${MOUNT_POINT}
     
+sast:
+  stage: test
 
 
 trivy_container_scanning:
